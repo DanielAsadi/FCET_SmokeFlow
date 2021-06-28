@@ -1,0 +1,8 @@
+{
+    "board": "arduino:avr:mega",
+    "sketch": "A_control_manual\\A_control_manual.ino",
+    "port": "COM7",
+    "programmer": "arduino:avrisp",
+    "output": "../ArduinoOutput",
+    "configuration": "cpu=atmega2560"
+}

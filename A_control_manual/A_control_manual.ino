@@ -60,7 +60,7 @@ uint16_t encoderPosition;
 //let's also create a variable where we can count how many times we've tried to obtain the position in case there are errors
 uint8_t attempts;
 
-int incomingByte;      // a variable to read incoming serial data into
+int incomingByte; // a variable to read incoming serial data into
 
 void setup()
 {

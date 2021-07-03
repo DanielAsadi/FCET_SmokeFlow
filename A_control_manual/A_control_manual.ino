@@ -61,6 +61,7 @@ int incomingByte;      // a variable to read incoming serial data into
 void setup()
 {
   digitalWrite(WIRE, HIGH); //Set wire off by default
+  digitalWrite(VALVE, LOW); //Set valve off by default
   //Set the modes for the SPI IO
   pinMode(SPI_SCLK, OUTPUT);
   pinMode(SPI_MOSI, OUTPUT);
@@ -78,6 +79,7 @@ void setup()
 
   //Initialize the UART serial connection for debugging
   Serial.begin(BAUDRATE);
+  Serial.setTimeout(50);
 
   //Get the CS line high which is the default inactive state
   digitalWrite(ENC_0, HIGH);
@@ -103,6 +105,7 @@ void loop()
   //setZeroSPI(ENC_0);
   //setZeroSPI(ENC_1);
   
+  /* TEMPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
   attempts = 0; //set attemps counter at 0 so we can try again if we get bad position
 
   //this function gets the encoder position and returns it as a uint16_t
@@ -113,7 +116,7 @@ void loop()
   //make 3 attempts for position. we will pre-increment attempts because we'll use the number later and want an accurate count
   while (encoderPosition == 0xFFFF && ++attempts < 3){
     encoderPosition = getPositionSPI(ENC_0, RES14);} //try again
-
+  
   if (encoderPosition == 0xFFFF){ //position is bad, let the user know how many times we tried
     Serial.print("Encoder 0 error. Attempts: ");
     Serial.print(attempts, DEC); //print out the number in decimal format. attempts - 1 is used since we post incremented the loop
@@ -121,7 +124,7 @@ void loop()
   
   else { //position was good, print to serial stream
     Serial.println(encoderPosition, DEC);} //print the position in decimal format
-
+  */
   if (Serial.available() > 0) {
     incomingByte = Serial.read(); // read the oldest byte in the serial buffer:
 
@@ -163,7 +166,7 @@ void loop()
   }
 
   //For the purpose of this demo we don't need the position returned that quickly so let's wait a half second between reads
-  delay(250);   //delay() is in milliseconds
+  //delay(250);   //delay() is in milliseconds
 }
 
 /*

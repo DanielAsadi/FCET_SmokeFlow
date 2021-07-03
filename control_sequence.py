@@ -75,7 +75,7 @@ if __name__ == "__main__":
                 print('ERROR')
         if setting == 1:
             controlValve(ser)
-            time.sleep(5) #let liquid settle
+            time.sleep(10) #let liquid settle
             controlCam(ser)
             controlWire(ser)
         elif setting == 0:

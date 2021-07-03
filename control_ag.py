@@ -1,3 +1,7 @@
+#Daniel Asadi
+#Eng Sci 2T3
+#FCET Lab, UTIAS
+
 import serial
 import time
 #Experimentally determine delays and order, might have to do threading for delays to not interrupt other processes

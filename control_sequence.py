@@ -1,3 +1,7 @@
+#Daniel Asadi
+#Eng Sci 2T3
+#FCET Lab, UTIAS
+
 import serial
 import time
 

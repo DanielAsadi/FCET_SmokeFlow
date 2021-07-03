@@ -1,3 +1,7 @@
+//Daniel Asadi
+//Eng Sci 2T3
+//FCET Lab, UTIAS
+
 /* MANUAL CONTROL FOR MEGA
    Set the baud rate to 115200 to view the serial stream the position from the AMT22.
 

@@ -1,3 +1,7 @@
+//Daniel Asadi
+//Eng Sci 2T3
+//FCET Lab, UTIAS
+
 /*
  * After uploading code to Arduino Uno open the open the Serial Monitor under the Tools 
  * menu and set the baud rate to 115200 to view the serial stream the position from the AMT22.

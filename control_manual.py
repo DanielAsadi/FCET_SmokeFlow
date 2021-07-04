@@ -21,11 +21,12 @@ def controlValve(ser, status1):
 def controlCam(ser): #might have to change
     #ser = serial.Serial('COM5', 115200, timeout=1) #temporary
     ser.write(b'C') #high
-    time.sleep(0.001)
+    time.sleep(0.1)
     ser.write(b'D') #low
     print('CAM RECORD')
+    time.sleep(0.1)
     ser.write(b'C') #high
-    time.sleep(0.001)
+    time.sleep(0.1)
     ser.write(b'D') #low
     print('CAM READY')
     #ser.close() #temporary
@@ -88,17 +89,18 @@ if __name__ == "__main__":
     status4 = 0
     setting = 5
 
-    print('Valve control (LEDY): TOGGLE 1')
-    print('Camera control (LEDR): TOGGLE 2')
-    print('Wire control (LEDG): TOGGLE 3')
-    print('Capacitor control (LEDB): TOGGLE 4')
-    print('Stop: 0')
+    print('Valve control (LEDY): TOGGLE [1]')
+    print('Camera control (LEDR): TOGGLE [2]')
+    print('Wire control (LEDG): TOGGLE [3]')
+    print('Capacitor control (LEDB): TOGGLE [4]')
+    print('Exit: [0]')
 
     while True:
         try:
             setting = int(input())
         except ValueError:
                 print('ERROR')
+                continue
         if setting == 1:
             status1 = controlValve(ser, status1)
         elif setting == 2:

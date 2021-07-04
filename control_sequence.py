@@ -14,11 +14,12 @@ def controlValve(ser): #add 2s timer
 
 def controlCam(ser): #might have to change
     ser.write(b'C') #high
-    time.sleep(0.001)
+    time.sleep(0.1)
     ser.write(b'D') #low
     print('CAM RECORD')
+    time.sleep(0.1)
     ser.write(b'C') #high
-    time.sleep(0.001)
+    time.sleep(0.1)
     ser.write(b'D') #low
     print('CAM READY')
 
@@ -29,7 +30,7 @@ def controlWire(ser):
     ser.write(b'F') #low
     print('WIRE OFF')
 
-def controlCap(ser):
+def controlCap(ser): #need to add in and add charging duration delay in between
     ser.write(b'G') #high
     print('CAP DISCHARGED')
     ser.write(b'H') #low
@@ -63,25 +64,29 @@ if __name__ == "__main__":
     # make sure the 'COM#' is set according the Windows Device Manager
     ser = serial.Serial('COM7', 115200, timeout=1)
     time.sleep(2)
-    status1 = 0
-    status2 = 0
-    status3 = 0
-    status4 = 0
     setting = 5
-
-    print('Initiate Sequence: [1]')
-    print('Stop: [0]')
 
     while True:
         try:
-            setting = int(input())
+            setting = int(input('Initiate Sequence: [1]\nExit: [0]\n'))
         except ValueError:
                 print('ERROR')
+                continue
         if setting == 1:
             controlValve(ser)
-            time.sleep(10) #let liquid settle
-            controlCam(ser)
-            controlWire(ser)
+            print('Letting liquid settle...')
+            time.sleep(15) #let liquid settle
+            try:
+                setting = int(input('Continue: [1]\nRetry bead formation: [2]\n')) #retry dispensing liquid
+            except ValueError:
+                print('ERROR')
+                continue
+            if setting == 2:
+                continue
+            else:
+                controlCam(ser)
+                controlWire(ser)
+                print()
         elif setting == 0:
             emergencyStop()
         else:

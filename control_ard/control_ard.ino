@@ -1,6 +1,7 @@
 //Daniel Asadi
 //Eng Sci 2T3
 //FCET Lab, UTIAS
+//From code created by Jason Kelly at CUI Inc.
 
 /*
  * After uploading code to Arduino Uno open the open the Serial Monitor under the Tools 

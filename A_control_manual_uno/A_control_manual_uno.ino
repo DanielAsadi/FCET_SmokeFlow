@@ -1,6 +1,7 @@
 //Daniel Asadi
 //Eng Sci 2T3
 //FCET Lab, UTIAS
+//From code created by Jason Kelly at CUI Inc.
 
 /* MANUAL CONTROL FOR UNO
    Set the baud rate to 115200 to view the serial stream the position from the AMT22.

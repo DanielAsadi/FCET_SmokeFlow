@@ -12,5 +12,5 @@ This project uses the Anaconda virtual Python environment. The Pyserial package 
 > conda activate arduino
 (arduino) > conda install pyserial
 ```
-## Smoke FLow Circuit Diagram
+## Smoke Flow Circuit Diagram
 <img src= "Media/SmokeFlowCircuit.jpg">

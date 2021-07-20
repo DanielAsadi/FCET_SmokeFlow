@@ -21,3 +21,6 @@ This project uses the Anaconda virtual Python environment. The Pyserial package 
 
 ## Other Software Used
 PFV4 is used for the control and processing of the photos taken from the high-speed Photron Fastcam SA5
+
+# Version Status
+This current version supports manual and automated control for steady-state conditions under 5m/s without the active grid or capacitors

@@ -31,7 +31,7 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **Media** -> Setup diagrams and other pictures
 * **control_ard.ino** -> Version 1 of Arduino code
 * **control_V1.py** -> Version 1 of Python control code
-* * **control_ag.py** -> Python control code for unsteady case with active grid and encoder
+* **control_ag.py** -> Python control code for unsteady case with active grid and encoder
 * **control_manual.py** -> Python control code with componenets manually triggered on/off by user
 * **control_sequence.py** -> Python control code with timed sequence controlling all compoenents automatically
 * **desktop.ini** -> Ignore

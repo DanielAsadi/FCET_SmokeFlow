@@ -10,7 +10,7 @@ When analyzing the properties and features of flow around aerodynamic devices, t
 This code was operated using Ardino code which uses C++ and Python. The Arduino code controls the high/low signals and communication to the smoke flow instruments while the Python code controls the user interface and manual or automated control of these signals.
 
 ### Python Environment
-This project uses the Anaconda virtual Python environment. The Pyserial package is installed to communicate with the arduino using python. The commands below were used to create a virtual envrionment and install Pyserial.
+This project uses the Anaconda virtual Python environment. The Pyserial package is installed to communicate with the Arduino using Python. The commands below were used to create a virtual envrionment and install Pyserial.
 ```
 > conda create --name arduino python=3.7
 > conda activate arduino
@@ -21,6 +21,21 @@ This project uses the Anaconda virtual Python environment. The Pyserial package 
 
 ## Other Software Used
 PFV4 is used for the control and processing of the photos taken from the high-speed Photron Fastcam SA5
+
+## File Descriptions
+* **.vscode** -> VS Code setup files
+* **AMT22_SPI_Uno.ino** -> Original, unmodified code to read encoder output from CUI Inc. website
+* **A_control_manual.ino** -> Currently used Arduino code with Arduino Mega
+* **A_control_manual_test.ino** -> Arduino code that is being tested but not ready
+* **A_control_manual_uno.ino** -> Arduino code, but for Arduino Uno microcontroller
+* **Media** -> Setup diagrams and other pictures
+* **control_ard.ino** -> Version 1 of Arduino code
+* **control_V1.py** -> Version 1 of Python control code
+* * **control_ag.py** -> Python control code for unsteady case with active grid and encoder
+* **control_manual.py** -> Python control code with componenets manually triggered on/off by user
+* **control_sequence.py** -> Python control code with timed sequence controlling all compoenents automatically
+* **desktop.ini** -> Ignore
+
 
 ## Version Status
 This current version supports manual and automated control for steady-state conditions under 5m/s without the active grid or capacitors

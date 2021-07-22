@@ -23,18 +23,18 @@ This project uses the Anaconda virtual Python environment. The Pyserial package 
 PFV4 is used for the control and processing of the photos taken from the high-speed Photron Fastcam SA5
 
 ## File Descriptions
-* **.vscode** -> VS Code setup files
-* **AMT22_SPI_Uno.ino** -> Original, unmodified code to read encoder output from CUI Inc. website
-* **A_control_manual.ino** -> Currently used Arduino code with Arduino Mega
-* **A_control_manual_test.ino** -> Arduino code that is being tested but not ready
-* **A_control_manual_uno.ino** -> Arduino code, but for Arduino Uno microcontroller
-* **Media** -> Setup diagrams and other pictures
-* **control_ard.ino** -> Version 1 of Arduino code
-* **control_V1.py** -> Version 1 of Python control code
-* **control_ag.py** -> Python control code for unsteady case with active grid and encoder
-* **control_manual.py** -> Python control code with componenets manually triggered on/off by user
-* **control_sequence.py** -> Python control code with timed sequence controlling all compoenents automatically
-* **desktop.ini** -> Ignore
+* **.vscode**: VS Code setup files
+* **AMT22_SPI_Uno.ino**: Original, unmodified code to read encoder output from CUI Inc. website
+* **A_control_manual.ino**: Currently used Arduino code with Arduino Mega
+* **A_control_manual_test.ino**: Arduino code that is being tested but not ready
+* **A_control_manual_uno.ino**: Arduino code, but for Arduino Uno microcontroller
+* **Media**: Setup diagrams and other pictures
+* **control_ard.ino**: Version 1 of Arduino code
+* **control_V1.py**: Version 1 of Python control code
+* **control_ag.py**: Python control code for unsteady case with active grid and encoder
+* **control_manual.py**: Python control code with componenets manually triggered on/off by user
+* **control_sequence.py**: Python control code with timed sequence controlling all compoenents automatically
+* **desktop.ini**: Ignore
 
 
 ## Version Status

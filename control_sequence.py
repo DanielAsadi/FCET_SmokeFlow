@@ -5,7 +5,7 @@
 import serial
 import time
 
-def controlValve(ser): #add 2s timer
+def controlValve(ser):
     ser.write(b'A') #high
     print('VALVE OPEN')
     time.sleep(2) #valve duration
@@ -26,13 +26,14 @@ def controlCam(ser): #might have to change
 def controlWire(ser):
     ser.write(b'E') #high
     print('WIRE ON')
-    time.sleep(2) #wire duration
+    time.sleep(2) #wire duration - Re 60k: 2s, Re 100k: 1.5s
     ser.write(b'F') #low
     print('WIRE OFF')
 
-def controlCap(ser): #need to add in and add charging duration delay in between
+def controlCap(ser): #not included in circuit yet
     ser.write(b'G') #high
     print('CAP DISCHARGED')
+    time.sleep(1) #discharging duration
     ser.write(b'H') #low
     print('CAP CHARGING')
 
@@ -68,14 +69,14 @@ if __name__ == "__main__":
 
     while True:
         try:
-            setting = int(input('Initiate Sequence: [1]\nExit: [0]\n'))
+            setting = int(input('Start: [1]\nExit: [0]\n'))
         except ValueError:
                 print('ERROR')
                 continue
         if setting == 1:
             controlValve(ser)
             print('Letting liquid settle...')
-            time.sleep(15) #let liquid settle
+            time.sleep(15) #let liquid settle - Re 60k: 15s, Re 100k: 10s
             try:
                 setting = int(input('Continue: [1]\nRetry bead formation: [2]\n')) #retry dispensing liquid
             except ValueError:
@@ -86,6 +87,7 @@ if __name__ == "__main__":
             else:
                 controlCam(ser)
                 controlWire(ser)
+                print('Finished')
                 print()
         elif setting == 0:
             emergencyStop()

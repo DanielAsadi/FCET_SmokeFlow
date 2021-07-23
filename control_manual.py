@@ -6,8 +6,7 @@ import serial
 import time
 
 def controlValve(ser, status1):
-    #ser = serial.Serial('COM5', 115200, timeout=1) #temporary, did not work, look into later, and about fixing long time ser port open
-    if status1 == 0: #try by eliminating serial.println for encoder values - need to create manual vs ag arduino codes
+    if status1 == 0:
         ser.write(b'A') #high
         status1 = 1
         print('VALVE OPEN')
@@ -15,11 +14,9 @@ def controlValve(ser, status1):
         ser.write(b'B') #low
         status1 = 0
         print('VALVE CLOSED')
-    # ser.close() #temporary
     return status1
 
-def controlCam(ser): #might have to change
-    #ser = serial.Serial('COM5', 115200, timeout=1) #temporary
+def controlCam(ser):
     ser.write(b'C') #high
     time.sleep(0.1)
     ser.write(b'D') #low
@@ -29,7 +26,6 @@ def controlCam(ser): #might have to change
     time.sleep(0.1)
     ser.write(b'D') #low
     print('CAM READY')
-    #ser.close() #temporary
 
 def controlWire(ser, status3):
     if status3 == 0:

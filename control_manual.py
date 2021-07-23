@@ -62,7 +62,6 @@ def readEnc(loops):
     ser.close()
 
 def emergencyStop():
-    #ser = serial.Serial('COM5', 115200, timeout=1) #temporary
     ser.write(b'B') #low
     print('VALVE CLOSED')
     ser.write(b'D') #low

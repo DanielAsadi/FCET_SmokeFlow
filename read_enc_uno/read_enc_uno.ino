@@ -78,14 +78,14 @@ void setup()
 
   //start SPI bus
   SPI.begin();
+
+  //if you want to set the zero position before beggining uncomment the following function call
+  setZeroSPI(ENC_0);
+  //setZeroSPI(ENC_1);
 }
 
 void loop()
 {
-  //if you want to set the zero position before beggining uncomment the following function call
-  //setZeroSPI(ENC_0);
-  //setZeroSPI(ENC_1);
-
   //set attemps counter at 0 so we can try again if we get bad position
   attempts = 0;
 

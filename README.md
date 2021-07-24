@@ -27,9 +27,9 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **AMT22_SPI_Uno.ino**: Original, unmodified code to read encoder output from CUI Inc. website
 * **A_control_manual.ino**: Currently used Arduino code with Arduino Mega
 * **A_control_manual_test.ino**: Arduino code that is being tested but not ready
-* **A_control_manual_uno.ino**: Arduino code, but for Arduino Uno microcontroller
+* **A_control_manual_uno.ino**: Arduino code, but for Arduino Uno instead
 * **Media**: Setup diagrams and other pictures
-* **control_ard.ino**: Version 1 of Arduino code
+* **read_enc_uno.ino**: Code for second arduino which recieves input from the encoder on the active grid
 * **control_V1.py**: Version 1 of Python control code
 * **control_ag.py**: Python control code for unsteady case with active grid and encoder
 * **control_manual.py**: Python control code with componenets manually triggered on/off by user

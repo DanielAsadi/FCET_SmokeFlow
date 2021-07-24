@@ -37,4 +37,5 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **desktop.ini**: Ignore
 
 ## Version Status
-This current version supports manual and automated control for steady-state conditions under 5m/s without the active grid or capacitors
+*v1.0*: This version supports manual and automated control for steady-state conditions under 5m/s without the active grid or capacitors
+*v2.0*: This current version supports v1.0 features and automated control triggered by the active grid encoder with a second arduino

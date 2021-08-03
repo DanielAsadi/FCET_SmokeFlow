@@ -1,6 +1,4 @@
 {
-    "python.pythonPath": "c:\\Users\\danie\\anaconda3\\envs\\arduino\\python.exe",
-    
+    "python.pythonPath": "C:\\Users\\danie\\Desktop\\FCET_SmokeFlow\\smokeflow\\Scripts\\python.exe",
     "python.terminal.activateEnvironment": true,
-
 }

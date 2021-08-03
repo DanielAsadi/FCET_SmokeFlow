@@ -34,7 +34,6 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **control_ag.py**: Python control code for unsteady case with active grid and encoder
 * **control_manual.py**: Python control code with componenets manually triggered on/off by user
 * **control_sequence.py**: Python control code with timed sequence controlling all compoenents automatically
-* **desktop.ini**: Ignore
 
 ## Version Status
 ### v1.0

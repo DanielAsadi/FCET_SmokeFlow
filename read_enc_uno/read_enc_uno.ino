@@ -44,6 +44,7 @@
 
 //create a 16 bit variable to hold the encoders position
 uint16_t encoderPosition;
+uint16_t theta;
 //let's also create a variable where we can count how many times we've tried to obtain the position in case there are errors
 uint8_t attempts;
 
@@ -78,7 +79,6 @@ void setup()
 
   //start SPI bus
   SPI.begin();
-
   //if you want to set the zero position before beggining uncomment the following function call
   setZeroSPI(ENC_0);
   //setZeroSPI(ENC_1);
@@ -86,6 +86,7 @@ void setup()
 
 void loop()
 {
+
   //set attemps counter at 0 so we can try again if we get bad position
   attempts = 0;
 
@@ -109,7 +110,8 @@ void loop()
   else
   { //position was good, print to serial stream
     //Serial.print("Encoder 0: ");
-    Serial.println(encoderPosition, DEC); //print the position in decimal format
+    theta = encoderPosition/45.5083333333;
+    Serial.println(theta, DEC); //print the position in decimal format
     //Serial.write("\r\n");
   }
 

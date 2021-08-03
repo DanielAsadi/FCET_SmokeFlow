@@ -4,6 +4,10 @@
 
 import serial
 import time
+import create_plot
+import create_csv
+
+
 #Experimentally determine delays and order, might have to do threading for delays to not interrupt other processes
 #If multiple inputs need to be turned on at same time adjust ser.write letter to same letter
 
@@ -78,6 +82,7 @@ if __name__ == "__main__":
 
     while True:
         try:
+            filename = str(input('Enter trial name:\n'))
             setting = int(input('Start: [1]\nExit: [0]\n'))
         except ValueError:
                 print('ERROR')

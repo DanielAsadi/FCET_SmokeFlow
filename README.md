@@ -10,11 +10,14 @@ When analyzing the properties and features of flow around aerodynamic devices, t
 This code was operated using Ardino code which uses C++ and Python. The Arduino code controls the high/low signals and communication to the smoke flow instruments while the Python code controls the user interface and manual or automated control of these signals.
 
 ### Python Environment
-This project uses the Anaconda virtual Python environment. The Pyserial package is installed to communicate with the Arduino using Python. The commands below were used to create a virtual envrionment and install Pyserial.
+This project uses the virutalenv Python environment. The Pyserial package is installed to communicate with the Arduino using Python. Matplotlib and Pandas packages are installed for encoder data graphing The commands below were used to create a virtual envrionment and install the additonal packages.
 ```
-> conda create --name arduino python=3.7
-> conda activate arduino
-(arduino) > conda install pyserial
+> pip install virtualenv
+> python3 -m venv smokeflow
+> smokeflow\Scripts\activate.bat
+(smokeflow) > pip install pyserial
+(smokeflow) > pip install matplotlib
+(smokeflow) > pip install pandas
 ```
 ## Smoke Flow Circuit Diagram and Experimental Setup Photos
 <img src= "Media/SmokeFlowCircuit.jpg">
@@ -28,7 +31,6 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **.vscode**: VS Code setup files
 * **AMT22_SPI_Uno.ino**: Original, unmodified code to read encoder output from CUI Inc. website
 * **A_control_manual.ino**: Currently used Arduino code with Arduino Mega
-* **A_control_manual_test.ino**: Arduino code that is being tested but not ready
 * **A_control_manual_uno.ino**: Arduino code, but for Arduino Uno instead
 * **Media**: Setup diagrams and other pictures
 * **read_enc_uno.ino**: Code for the second Arduino used which recieves input from the encoder on the active grid

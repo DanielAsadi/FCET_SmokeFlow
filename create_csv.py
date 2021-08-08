@@ -5,30 +5,30 @@
 import csv
 import time
 
-def create_csv(filename):
-    t = 0 #add live timing
-    angle = 0
-    iteration = 1
-    filename = 'data.csv' #add prompt to name file
+angle = 0 #global var so it can be changed from a different file
 
-    fieldnames = ["Time", "angle", "Iteration"]
+def create_csv(filename):
+    start = time.perf_counter()
+    t = 0
+    iteration = 1
+    fieldnames = ["t", "angle", "iteration"]
 
     with open(filename, 'w') as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         csv_writer.writeheader()
 
-    while True:
-
+    for i in range(500):
+        end = time.perf_counter()
+        t = round((end-start), 3) #update time
         with open(filename, 'a') as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-
             info = {
-                "Time": t,
+                "t": t,
                 "angle": angle,
-                "Iteration": iteration
+                "iteration": iteration
             }
-
             csv_writer.writerow(info)
-            #print(t, angle, iteration)
-
-        time.sleep(1) #need to change
+            print(t, angle, iteration)
+            iteration+=1
+        time.sleep(0.001) #need to change
+    print('done createcsv')

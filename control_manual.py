@@ -18,12 +18,12 @@ def controlValve(ser, status1):
 
 def controlCam(ser):
     ser.write(b'C') #high
-    time.sleep(0.1)
+    time.sleep(0.2)
     ser.write(b'D') #low
     print('CAM RECORD')
     time.sleep(0.1)
     ser.write(b'C') #high
-    time.sleep(0.1)
+    time.sleep(0.2)
     ser.write(b'D') #low
     print('CAM READY')
 
@@ -61,7 +61,7 @@ def readEnc(loops):
                 print('ERROR')
     ser.close()
 
-def emergencyStop():
+def emergencyStop(ser):
     ser.write(b'B') #low
     print('VALVE CLOSED')
     ser.write(b'D') #low
@@ -105,6 +105,6 @@ if __name__ == "__main__":
         elif setting == 4:
             status4 = controlCap(ser, status4)
         elif setting == 0:
-            emergencyStop()
+            emergencyStop(ser)
         else:
             print('ERROR')

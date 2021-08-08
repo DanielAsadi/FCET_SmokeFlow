@@ -55,6 +55,7 @@
 #define CAM 12      //PWM
 #define WIRE 11     //PWM
 #define CAP 10      //PWM
+#define CAMOUT A0 //CAM RECORDING OUTPUT
 
 //create a 16 bit variable to hold the encoders position
 uint16_t encoderPosition;
@@ -109,7 +110,15 @@ void loop()
   //if you want to set the zero position before beggining uncomment the following function call
   //setZeroSPI(ENC_0);
   //setZeroSPI(ENC_1);
-
+  int camOutput = analogRead(CAMOUT);
+  float voltage = camOutput * (5.0 / 1023.0);
+  if(voltage > 4){
+    digitalWrite(LEDB, HIGH);    
+  }
+  else{
+    digitalWrite(LEDB, LOW);
+  }
+  //Serial.println(voltage);
   /* TEMPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
   attempts = 0; //set attemps counter at 0 so we can try again if we get bad position
 

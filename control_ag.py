@@ -4,9 +4,8 @@
 
 import serial
 import time
-import create_plot
-import create_csv
-
+#import create_plot
+#import create_csv
 
 #Experimentally determine delays and order, might have to do threading for delays to not interrupt other processes
 #If multiple inputs need to be turned on at same time adjust ser.write letter to same letter
@@ -49,9 +48,10 @@ def readEnc(loops):
         if line:
             try:
                 string = line.decode() #convert the byte string to a unicode string
-                pos = int(string) #convert the unicode string to an int
-                print(pos)
-                if 0<=pos<=500: #need to set to ahead of actual phase angle of interest because of delay
+                angle = int(string) #convert the unicode string to an int
+                create_csv.angle = angle #update angle
+                #print(angle)
+                if 0<=angle<=30: #need to set to ahead of actual phase angle of interest because of delay
                     controlCam(ser)
                     controlWire(ser) #smoke deployed
                     print('Finished')
@@ -90,7 +90,7 @@ if __name__ == "__main__":
         if setting == 1:
             controlValve(ser)
             print('Letting liquid settle...')
-            time.sleep(10) #let liquid settle - Re 60k: 15s, Re 100k: 10s
+            time.sleep(5) #let liquid settle - Re 60k: 15s, Re 100k: 10s
             try:
                 setting = int(input('Continue: [1]\nRetry bead formation: [2]\n')) #retry dispensing liquid
             except ValueError:
@@ -99,7 +99,13 @@ if __name__ == "__main__":
             if setting == 2:
                 continue
             else:
-                readEnc(1000)               
+                create_csv.create_csv(filename) #turn on encoder recording, max 1000 iterations
+                create_plot.create_plot(filename) #graph encoder position live
+                print('done createplot')
+                readEnc(500) #run sequence, max 1000 iterations
+                print('done readenc')
+                create_plot.save(filename) #save png of chart
+                print('done save')
                 print()
         elif setting == 0:
             emergencyStop()

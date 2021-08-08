@@ -1,4 +1,4 @@
-# <img src= "Media/FCET_Logo.png" height = "60"> Smoke Flow Visualization Setup
+# <img src= "Media/FCET_Logo.png" height = "60"> Smoke Flow Visualization Setup <img src= "Media/UTIAS_FCET_Crest.png" height = "60">
 This set of code is for the control of the smoke flow visualization experimental setup at the FCET lab wind tunnel in UTIAS. 
 Using an Arduino which receives input from the user or active grid encoder, the circuit outputs timed controls to the valve, heated nichrome wire and camera to create and photograph the smoke flow.
 
@@ -16,8 +16,10 @@ This project uses the Anaconda virtual Python environment. The Pyserial package 
 > conda activate arduino
 (arduino) > conda install pyserial
 ```
-## Smoke Flow Circuit Diagram
+## Smoke Flow Circuit Diagram and Experimental Setup Photos
 <img src= "Media/SmokeFlowCircuit.jpg">
+<img src= "Media/SetupPhoto1.jpg">
+<img src= "Media/SetupPhoto2.jpg">
 
 ## Other Software Used
 PFV4 is used for the control and processing of the photos taken from the high-speed Photron Fastcam SA5

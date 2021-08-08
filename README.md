@@ -1,4 +1,4 @@
-# <img src= "Media/FCET_Logo.png" height = "60"> Smoke Flow Visualization Setup <img src= "Media/UTIAS_FCET_Crest.png" height = "60">
+# <img src= "Media/FCET_Logo.png" height = "60"> Smoke Flow Visualization Setup
 This set of code is for the control of the smoke flow visualization experimental setup at the FCET lab wind tunnel in UTIAS. 
 Using an Arduino which receives input from the user or active grid encoder, the circuit outputs timed controls to the valve, heated nichrome wire and camera to create and photograph the smoke flow.
 
@@ -42,3 +42,10 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 This version supports manual and automated control for steady-state conditions under 5m/s without the active grid or capacitors
 ### v2.0
 This current version supports v1.0 features and automated control triggered by the active grid encoder with a second Arduino
+
+## Contributors
+Project by: Daniel Asadi, University of Toronto, Division of Engineering Science
+
+Supervised by: Suraj Banal, FCET Lab, UTIAS and Professor Philippe Lavoie, FCET Lab, UTIAS
+
+<img src= "Media/UTIAS_FCET_Crest.jpg" height = "60">

@@ -48,4 +48,4 @@ Project by: Daniel Asadi, University of Toronto, Division of Engineering Science
 
 Supervised by: Suraj Banal, FCET Lab, UTIAS and Professor Philippe Lavoie, FCET Lab, UTIAS
 
-<img src= "Media/UTIAS_FCET_Crest.jpg" height = "60">
+<img src= "Media/UTIAS_FCET_Crest.jpg">

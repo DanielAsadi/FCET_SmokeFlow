@@ -110,7 +110,7 @@ void loop()
   //if you want to set the zero position before beggining uncomment the following function call
   //setZeroSPI(ENC_0);
   //setZeroSPI(ENC_1);
-  int camOutput = analogRead(CAMOUT);
+  /*int camOutput = analogRead(CAMOUT);
   float voltage = camOutput * (5.0 / 1023.0);
   if(voltage > 4){
     digitalWrite(LEDB, HIGH);    
@@ -118,7 +118,7 @@ void loop()
   else{
     digitalWrite(LEDB, LOW);
   }
-  //Serial.println(voltage);
+  Serial.println(voltage);*/
   /* TEMPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
   attempts = 0; //set attemps counter at 0 so we can try again if we get bad position
 

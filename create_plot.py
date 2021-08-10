@@ -9,7 +9,7 @@ from itertools import count
 
 filename = 't1.csv'
 
-print('create_plot running')
+print('\ncreate_plot running')
 plt.style.use('fivethirtyeight')
 index = count()
 

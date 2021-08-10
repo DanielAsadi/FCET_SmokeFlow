@@ -32,30 +32,6 @@ def controlCam(ser):  # might have to change
     ser.write(b'D')  # low
     print('CAM READY')
 
-    # measuring cam delay
-    camStart = time.perf_counter()
-
-    while True:
-        line = ser2.readline()  # read a byte
-        if line:
-            try:
-                # updating values
-                string = line.decode()  # convert the byte string to a unicode string
-                linelist = string.split('\t')
-                # convert the unicode string to an int
-                voltage = float(linelist[1])
-
-                if voltage > 4:
-                    arduinoDelay = linelist[2]
-                    camEnd = time.perf_counter()
-                    camDelay = round((camEnd-camStart), 5)
-                    print('CAM DELAY:'+str(camDelay))
-                    print('ARDUINO CAM DELAY:'+str(arduinoDelay))
-                    completed = False
-                    break
-            except ValueError:
-                print('ERROR')
-
 
 def controlWire(ser):
     ser.write(b'E')  # high
@@ -73,14 +49,21 @@ def controlCap(ser):  # not included in circuit yet
     print('CAP CHARGING')
 
 
-def readEnc(loops, filename):
+def readEnc(loops, filename, period, theta):
     # initializng csv values
     start = time.perf_counter()
     iteration = 0
     fieldnames = ["t", "angle", "iteration"]
     completed = False
-    status = 0
     linelist = []
+    camStart = 0
+    camEnd = 0
+    camDelay = 0
+    voltage = 0
+    v = False
+    offset = 0
+    if period == 2.5:
+        offset = 17
     #filename = filename +'.csv'
 
     # writing csv headers commented out for thread.py
@@ -90,6 +73,7 @@ def readEnc(loops, filename):
     print('READING AND SAVING DATA...')
 
     for i in range(loops):
+        loop_start = time.perf_counter()
         line = ser2.readline()  # read a byte
         if line:
             try:
@@ -97,16 +81,27 @@ def readEnc(loops, filename):
                 string = line.decode()  # convert the byte string to a unicode string
                 linelist = string.split('\t')
                 # convert the unicode string to an int
+                #print(linelist)
                 angle = int(linelist[0])
-                voltage = float(linelist[1])
-                # print(str(angle)+'\t'+str(voltage))
+                if len(linelist)>1:
+                    voltage = float(linelist[1])
+                #print(str(angle)+'\t'+str(voltage))
 
+                loop_end = time.perf_counter()
+                t2 = round((loop_end-loop_start), 5)
+                #print(t2)
+
+                if voltage > 4:
+                    #camEnd = time.perf_counter()
+                    #camDelay = round((camEnd-camStart), 5)
+                    #print('CAM DELAY:'+str(camDelay))
+                    #break
+                    v = True
+                
+                iteration += 1
                 end = time.perf_counter()
                 t = round((end-start), 3)  # update time
-                iteration += 1
 
-                if t > 5:
-                    status = 1
                 # writing to csv
                 with open(filename, 'a') as csv_file:
                     csv_writer = csv.DictWriter(
@@ -117,19 +112,26 @@ def readEnc(loops, filename):
                         "iteration": iteration
                     }
                     csv_writer.writerow(info)
-                    #print(t, angle, iteration)
-                    # time.sleep(0.001) #need to change
+                # print(t, angle, iteration)
+
+                if v:
+                    break
 
                 # trigger
                 # need to set to ahead of actual phase angle of interest because of delay
-                if angle >= 0 and status == 1:
-                    controlCam(ser)
+                if angle == theta and t > 2 and not completed:
+                    controlCam(ser) # add delay
+                    camStart = time.perf_counter()
+                    wireStart = time.perf_counter()
                     controlWire(ser)  # smoke deployed
-                    print('Finished')
+                    wireEnd = time.perf_counter()
+                    t3 = round((wireEnd-wireStart), 3)  # update time
+                    print('Finished') # now need to measure time delay of smoke
                     completed = True
-                    break
+                    #break
             except ValueError:
                 print('ERROR')
+        #time.sleep(0.01) #need to change
     if not completed:
         print('ERROR, position range not detected')
 
@@ -158,13 +160,17 @@ if __name__ == "__main__":
         try:
             #filename = str(input('Enter trial name:\n'))
             setting = int(input('Start: [1]\nExit: [0]\n'))
+            if setting == 1:
+                freq = int(input('Enter active grid frequency (Hz):\n'))
+                theta = int(input('Enter encoder trigger angle (°):\n'))
+                period = 1/freq
         except ValueError:
             print('ERROR')
             continue
         if setting == 1:
             controlValve(ser)
             print('Letting liquid settle...')
-            time.sleep(10)  # let liquid settle - Re 60k: 15s, Re 100k: 10s
+            #time.sleep(10)  # let liquid settle - Re 60k: 15s, Re 100k: 10s
             try:
                 # retry dispensing liquid
                 setting = int(
@@ -175,7 +181,8 @@ if __name__ == "__main__":
             if setting == 2:
                 continue
             else:
-                readEnc(1000, filename)  # run sequence, max 1000 iterations
+                # run sequence, max 1000 iterations
+                readEnc(2000, filename, period, theta)
                 # save_plt(filename) #save png of chart
                 print()
         elif setting == 0:

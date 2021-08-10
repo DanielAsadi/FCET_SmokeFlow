@@ -48,10 +48,6 @@ uint16_t encoderPosition;
 uint16_t theta;
 //let's also create a variable where we can count how many times we've tried to obtain the position in case there are errors
 uint8_t attempts;
-int count;
-unsigned long StartTime;
-unsigned long CurrentTime;
-unsigned long ElapsedTime;
 int incomingByte; // a variable to read incoming serial data into
 
 void setup()
@@ -94,12 +90,6 @@ void loop()
 
   int camOutput = analogRead(CAMOUT);
   float voltage = camOutput * (5.0 / 1023.0);
-  if (voltage > 4 && count == 0)
-  {
-    CurrentTime = millis();
-    ElapsedTime = CurrentTime - StartTime;
-    count++;
-  }
 
   //this function gets the encoder position and returns it as a uint16_t
   //send the function either res12 or res14 for your encoders resolution
@@ -110,7 +100,6 @@ void loop()
   while (encoderPosition == 0xFFFF && ++attempts < 3)
   {
     encoderPosition = getPositionSPI(ENC_0, RES14); //try again
-    StartTime = millis();
   }
 
   if (encoderPosition == 0xFFFF)
@@ -138,24 +127,15 @@ void loop()
     { //to fix going over range due to noise
       theta = 0;
     }
+
     Serial.print(theta, DEC); //print the position in decimal format
     Serial.print("\t");
-    Serial.print(voltage);
-    if (count == 1)
-    {
-      Serial.print("\t");
-      Serial.println(ElapsedTime);
-    }
-    else
-    {
-      Serial.println();
-    }
-    //Serial.write("\r\n");
+    Serial.println(voltage);
   }
 
   //For the purpose of this demo we don't need the position returned that quickly so let's wait a half second between reads
   //delay() is in milliseconds
-  delay(100);
+  delay(50);
 }
 
 /*

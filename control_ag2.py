@@ -11,7 +11,7 @@ from threading import Thread
 import matplotlib.pyplot as plt
 import pandas as pd
 
-filename = 't1.csv'
+filename = 'case1671.csv'
 
 # Experimentally determine delays and order, might have to do threading for delays to not interrupt other processes
 # If multiple inputs need to be turned on at same time adjust ser.write letter to same letter
@@ -164,7 +164,7 @@ def create_csv(filename, t_list, angle_list, iteration_list):
             csv_writer.writerow(info)
 
 
-def create_plt(filename):
+def create_plt(filename): #calculate freq, convert time axis to phase, increase axis tics
     data = pd.read_csv(filename)
     x = data['t']
     y = data['angle']

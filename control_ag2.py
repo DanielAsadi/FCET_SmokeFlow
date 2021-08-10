@@ -6,6 +6,7 @@
 import serial
 import time
 import csv
+import datetime
 
 filename = 't1.csv'
 
@@ -49,21 +50,23 @@ def controlCap(ser):  # not included in circuit yet
     print('CAP CHARGING')
 
 
-def readEnc(loops, filename, period, theta):
+def readEnc(loops, filename, freq, theta):
     # initializng csv values
     start = time.perf_counter()
     iteration = 0
     fieldnames = ["t", "angle", "iteration"]
     completed = False
     linelist = []
-    camStart = 0
-    camEnd = 0
-    camDelay = 0
     voltage = 0
+    delay = 0
     v = False
-    offset = 0
-    if period == 2.5:
-        offset = 17
+    period = 1/freq
+    #offset = 0
+    if period == 2.5:  # experimentally determined values based on ag freq
+        camDelay = 0.0037046
+        smokeDelay = 0.02
+        delay = period - camDelay - smokeDelay
+        #offset = 17
     #filename = filename +'.csv'
 
     # writing csv headers commented out for thread.py
@@ -73,7 +76,6 @@ def readEnc(loops, filename, period, theta):
     print('READING AND SAVING DATA...')
 
     for i in range(loops):
-        loop_start = time.perf_counter()
         line = ser2.readline()  # read a byte
         if line:
             try:
@@ -81,23 +83,21 @@ def readEnc(loops, filename, period, theta):
                 string = line.decode()  # convert the byte string to a unicode string
                 linelist = string.split('\t')
                 # convert the unicode string to an int
-                #print(linelist)
+                # print(linelist)
                 angle = int(linelist[0])
-                if len(linelist)>1:
+                if len(linelist) > 1:
                     voltage = float(linelist[1])
-                #print(str(angle)+'\t'+str(voltage))
-
-                loop_end = time.perf_counter()
-                t2 = round((loop_end-loop_start), 5)
-                #print(t2)
+                # print(str(angle)+'\t'+str(voltage))
 
                 if voltage > 4:
-                    #camEnd = time.perf_counter()
-                    #camDelay = round((camEnd-camStart), 5)
-                    #print('CAM DELAY:'+str(camDelay))
-                    #break
+                    t2 = datetime.datetime.utcnow()
+                    timest = t2-t1
+                    print(str(freq)+' Hz:\t'+str(timest))
+                    f = open("camDelay.txt", "a")
+                    f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
+                    f.close()
                     v = True
-                
+
                 iteration += 1
                 end = time.perf_counter()
                 t = round((end-start), 3)  # update time
@@ -120,18 +120,16 @@ def readEnc(loops, filename, period, theta):
                 # trigger
                 # need to set to ahead of actual phase angle of interest because of delay
                 if angle == theta and t > 2 and not completed:
-                    controlCam(ser) # add delay
-                    camStart = time.perf_counter()
-                    wireStart = time.perf_counter()
+                    # time.sleep(delay)
+                    controlCam(ser)  # add delay
+                    t1 = datetime.datetime.utcnow()
                     controlWire(ser)  # smoke deployed
-                    wireEnd = time.perf_counter()
-                    t3 = round((wireEnd-wireStart), 3)  # update time
-                    print('Finished') # now need to measure time delay of smoke
+                    # now need to measure time delay of smoke
+                    print('Finished')
                     completed = True
-                    #break
+                    # break
             except ValueError:
                 print('ERROR')
-        #time.sleep(0.01) #need to change
     if not completed:
         print('ERROR, position range not detected')
 
@@ -161,16 +159,15 @@ if __name__ == "__main__":
             #filename = str(input('Enter trial name:\n'))
             setting = int(input('Start: [1]\nExit: [0]\n'))
             if setting == 1:
-                freq = int(input('Enter active grid frequency (Hz):\n'))
+                freq = float(input('Enter active grid frequency (Hz):\n'))
                 theta = int(input('Enter encoder trigger angle (°):\n'))
-                period = 1/freq
         except ValueError:
             print('ERROR')
             continue
         if setting == 1:
             controlValve(ser)
             print('Letting liquid settle...')
-            #time.sleep(10)  # let liquid settle - Re 60k: 15s, Re 100k: 10s
+            # time.sleep(10)  # let liquid settle - Re 60k: 15s, Re 100k: 10s
             try:
                 # retry dispensing liquid
                 setting = int(
@@ -182,7 +179,7 @@ if __name__ == "__main__":
                 continue
             else:
                 # run sequence, max 1000 iterations
-                readEnc(2000, filename, period, theta)
+                readEnc(2000, filename, freq, theta)
                 # save_plt(filename) #save png of chart
                 print()
         elif setting == 0:

@@ -7,6 +7,9 @@ import serial
 import time
 import csv
 import datetime
+from threading import Thread
+import matplotlib.pyplot as plt
+import pandas as pd
 
 filename = 't1.csv'
 
@@ -37,7 +40,7 @@ def controlCam(ser):  # might have to change
 def controlWire(ser):
     ser.write(b'E')  # high
     print('WIRE ON')
-    time.sleep(2)  # wire duration - Re 60k: 2s, Re 100k: 1.5s
+    time.sleep(3)  # wire duration - Re 60k: 2s, Re 100k: 1.5s
     ser.write(b'F')  # low
     print('WIRE OFF')
 
@@ -54,20 +57,23 @@ def readEnc(loops, filename, freq, theta):
     # initializng csv values
     start = time.perf_counter()
     iteration = 0
-    fieldnames = ["t", "angle", "iteration"]
     completed = False
     linelist = []
+    t_list = []
+    angle_list = []
+    iteration_list = []
     voltage = 0
+    camDelay = 0.0037046
     delay = 0
-    v = False
+    trigT = 0
     period = 1/freq
-    #offset = 0
-    if period == 2.5:  # experimentally determined values based on ag freq
-        camDelay = 0.0037046
-        smokeDelay = 0.02
-        delay = period - camDelay - smokeDelay
-        #offset = 17
-    #filename = filename +'.csv'
+
+    #if freq == 0.4:  # experimentally determined values based on ag freq
+        #smokeDelay = 0.02
+        #delay = period - camDelay - smokeDelay
+    #elif freq == 2:
+        #smokeDelay = 1.414
+        #delay = period - camDelay - smokeDelay
 
     # writing csv headers commented out for thread.py
     # with open(filename, 'w') as csv_file: #move to thread.py
@@ -89,49 +95,84 @@ def readEnc(loops, filename, freq, theta):
                     voltage = float(linelist[1])
                 # print(str(angle)+'\t'+str(voltage))
 
-                if voltage > 4:
-                    t2 = datetime.datetime.utcnow()
-                    timest = t2-t1
-                    print(str(freq)+' Hz:\t'+str(timest))
-                    f = open("camDelay.txt", "a")
-                    f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
-                    f.close()
-                    v = True
+                # if voltage > 4:
+                    #t2 = datetime.datetime.utcnow()
+                    #timest = t2-t1
+                    #print(str(freq)+' Hz:\t'+str(timest))
+                    #f = open("camDelay.txt", "a")
+                    #f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
+                    #f.close()
 
                 iteration += 1
                 end = time.perf_counter()
                 t = round((end-start), 3)  # update time
-
-                # writing to csv
-                with open(filename, 'a') as csv_file:
-                    csv_writer = csv.DictWriter(
-                        csv_file, fieldnames=fieldnames)
-                    info = {
-                        "t": t,
-                        "angle": angle,
-                        "iteration": iteration
-                    }
-                    csv_writer.writerow(info)
+                t_list.append(t)
+                angle_list.append(angle)
+                iteration_list.append(iteration)
                 # print(t, angle, iteration)
-
-                if v:
-                    break
 
                 # trigger
                 # need to set to ahead of actual phase angle of interest because of delay
-                if angle == theta and t > 2 and not completed:
+                if angle == theta and t > 5 and not completed:
                     # time.sleep(delay)
                     controlCam(ser)  # add delay
-                    t1 = datetime.datetime.utcnow()
-                    controlWire(ser)  # smoke deployed
-                    # now need to measure time delay of smoke
-                    print('Finished')
+                    #t1 = datetime.datetime.utcnow()
+                    #time1 = datetime.datetime.utcnow()
+                    t1 = Thread(target=controlWire, args=(ser,))
+                    t1.start()
+                    trigT = t
+                    print('Triggered at: '+str(trigT)+' s')
+
+                    #time2 = datetime.datetime.utcnow()
+                    #timest = time2-time1
+                    #print(str('WIRE DELAY:\t'+str(timest)))
                     completed = True
-                    # break
+
+                if completed and (t > (trigT+5)):
+                    break
+
             except ValueError:
                 print('ERROR')
     if not completed:
         print('ERROR, position range not detected')
+
+    print('Finished')
+    smokeDelay = float(input('Enter measured smoke delay from PFV4:\n'))
+    print('Start of phase: '+str(trigT+camDelay+smokeDelay)+' s')
+    create_csv(filename, t_list, angle_list, iteration_list)
+    create_plt(filename)
+
+
+def create_csv(filename, t_list, angle_list, iteration_list):
+    iteration = 1
+    fieldnames = ["t", "angle", "iteration"]
+
+    with open(filename, 'w') as csv_file:
+        csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        csv_writer.writeheader()
+
+    # writing to csv
+    for (t, angle, iteration) in zip(t_list, angle_list, iteration_list):
+        with open(filename, 'a') as csv_file:
+            csv_writer = csv.DictWriter(
+                csv_file, fieldnames=fieldnames)
+            info = {
+                "t": t,
+                "angle": angle,
+                "iteration": iteration
+            }
+            csv_writer.writerow(info)
+
+
+def create_plt(filename):
+    data = pd.read_csv(filename)
+    x = data['t']
+    y = data['angle']
+    plt.xlabel('time')
+    plt.ylabel('encoder angle')
+    plt.plot(x, y, linewidth=1)
+    plt.tight_layout()
+    plt.show()
 
 
 def emergencyStop(ser):

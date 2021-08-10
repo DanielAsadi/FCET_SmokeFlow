@@ -169,6 +169,20 @@ def create_plt(filename): #calculate freq, convert time axis to phase, increase 
     x = data['t']
     y = data['angle']
     plt.xlabel('time')
+    
+    x_plt = []
+    for t in x:
+        if if_append:
+            x_plt.append(t)
+            if_append = 0
+            index = 1
+
+        else:
+            index += 1
+            if index == 10:
+                if_append = 1
+    plt.xticks(x_plt)
+    
     plt.ylabel('encoder angle')
     plt.plot(x, y, linewidth=1)
     plt.tight_layout()

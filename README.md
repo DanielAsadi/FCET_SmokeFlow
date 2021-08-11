@@ -35,17 +35,17 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **A_control_manual.ino**: Currently used Arduino code with Arduino Mega
 * **A_control_manual_uno.ino**: Arduino code, but for Arduino Uno instead
 * **A_read_enc_uno.ino**: Code for the second Arduino used which recieves input from the encoder on the active grid
-* **Data**: Encoder data files
+* **Data**: Encoder data csv and graph files
 * **Media**: Setup diagrams and other pictures
 * **__pycache__**: Python cache files
 * **control_V1.py**: Version 1 of Python control code
-* **control_ag.py**: Python control code for unsteady case with active grid and encoder
-* **control_ag2.py**: Python control code for unsteady case with active grid and encoder and graphing ability
-* **control_manual.py**: Python control code with componenets manually triggered on/off by user
-* **control_sequence.py**: Python control code with timed sequence controlling all compoenents automatically
+* **ctrl_ag_V1.py**: Version 1 of Python control code for unsteady case with active grid and encoder
+* **ctrl_ag.py**: Python control code for unsteady case with active grid and encoder and graphing ability
+* **ctrl_man.py**: Python control code with componenets manually triggered on/off by user
+* **ctrl_seq.py**: Python control code with timed sequence controlling all compoenents automatically
 * **create_csv.py**: Creates csv for encoder data
 * **create_plot.py**: Creates graph for encoder data
-* **ctrl_ag_main.py**: Runs control_ag2.py and create_plot.py using threading and subprocess
+* **ctrl_ag_live.py**: Runs control_ag2.py and create_plot.py for live plotting using threading and subprocess
 
 
 ## Version Status

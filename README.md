@@ -56,7 +56,7 @@ This current version supports v1.0 features and automated control triggered by t
 
 ## Contributors
 Project by: Daniel Asadi, University of Toronto, Division of Engineering Science
-
+Assisted by: Daniel Foster, University of Toronto, Division of Engineering Science
 Supervised by: Suraj Banal, FCET Lab, UTIAS and Professor Philippe Lavoie, FCET Lab, UTIAS
 
 <img src= "Media/UTIAS_FCET_Crest.jpg">

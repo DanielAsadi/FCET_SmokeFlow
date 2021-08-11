@@ -11,13 +11,11 @@ from threading import Thread
 import matplotlib.pyplot as plt
 import pandas as pd
 
-filename = 'case1671.csv'
-
 # Experimentally determine delays and order, might have to do threading for delays to not interrupt other processes
 # If multiple inputs need to be turned on at same time adjust ser.write letter to same letter
 
 
-def controlValve(ser):  # add 2s timer
+def controlValve(ser):
     ser.write(b'A')  # high
     print('VALVE OPEN')
     time.sleep(2)  # valve duration
@@ -25,7 +23,7 @@ def controlValve(ser):  # add 2s timer
     print('VALVE CLOSED')
 
 
-def controlCam(ser):  # might have to change
+def controlCam(ser):
     ser.write(b'C')  # high
     time.sleep(0.1)
     ser.write(b'D')  # low
@@ -68,17 +66,13 @@ def readEnc(loops, filename, freq, theta):
     trigT = 0
     period = 1/freq
 
-    #if freq == 0.4:  # experimentally determined values based on ag freq
-        #smokeDelay = 0.02
-        #delay = period - camDelay - smokeDelay
-    #elif freq == 2:
-        #smokeDelay = 1.414
-        #delay = period - camDelay - smokeDelay
+    # if freq == 0.4:  # experimentally determined values based on ag freq
+    #smokeDelay = 0.02
+    #delay = period - camDelay - smokeDelay
+    # elif freq == 2:
+    #smokeDelay = 1.414
+    #delay = period - camDelay - smokeDelay
 
-    # writing csv headers commented out for thread.py
-    # with open(filename, 'w') as csv_file: #move to thread.py
-    #csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    # csv_writer.writeheader() #add ability to write to specific data folder
     print('READING AND SAVING DATA...')
 
     for i in range(loops):
@@ -100,8 +94,8 @@ def readEnc(loops, filename, freq, theta):
                     #timest = t2-t1
                     #print(str(freq)+' Hz:\t'+str(timest))
                     #f = open("camDelay.txt", "a")
-                    #f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
-                    #f.close()
+                    # f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
+                    # f.close()
 
                 iteration += 1
                 end = time.perf_counter()
@@ -113,16 +107,21 @@ def readEnc(loops, filename, freq, theta):
 
                 # trigger
                 # need to set to ahead of actual phase angle of interest because of delay
-                if angle == theta and t > 5 and not completed:
+
+                if iteration >= 10 and not completed:
                     # time.sleep(delay)
                     controlCam(ser)  # add delay
                     #t1 = datetime.datetime.utcnow()
                     #time1 = datetime.datetime.utcnow()
-                    t1 = Thread(target=controlWire, args=(ser,))
-                    t1.start()
+                    #t1 = Thread(target=controlValve, args=(ser,))
+                    # temp continuous mode
+                    t2 = Thread(target=controlWire, args=(ser,))
+                    # t1.start()
+                    t2.start()
+                    # t1.join()
+                    # t2.join()
                     trigT = t
                     print('Triggered at: '+str(trigT)+' s')
-
                     #time2 = datetime.datetime.utcnow()
                     #timest = time2-time1
                     #print(str('WIRE DELAY:\t'+str(timest)))
@@ -136,7 +135,7 @@ def readEnc(loops, filename, freq, theta):
     if not completed:
         print('ERROR, position range not detected')
 
-    print('Finished')
+    print('Finished')  # post-processing
     smokeDelay = float(input('Enter measured smoke delay from PFV4:\n'))
     print('Start of phase: '+str(trigT+camDelay+smokeDelay)+' s')
     create_csv(filename, t_list, angle_list, iteration_list)
@@ -146,6 +145,7 @@ def readEnc(loops, filename, freq, theta):
 def create_csv(filename, t_list, angle_list, iteration_list):
     iteration = 1
     fieldnames = ["t", "angle", "iteration"]
+    filename = filename+'.csv'
 
     with open(filename, 'w') as csv_file:
         csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -164,14 +164,15 @@ def create_csv(filename, t_list, angle_list, iteration_list):
             csv_writer.writerow(info)
 
 
-def create_plt(filename): #calculate freq, convert time axis to phase, increase axis tics
-    data = pd.read_csv(filename)
+def create_plt(filename):  # calculate freq, convert time axis to phase, increase axis tics, fix inital plot values issue
+    data = pd.read_csv(filename+'.csv')
     x = data['t']
     y = data['angle']
-    plt.xlabel('time')
-    plt.ylabel('encoder angle')
+    plt.xlabel('Time')
+    plt.ylabel('Encoder angle')
     plt.plot(x, y, linewidth=1)
-    plt.tight_layout()
+    #plt.tight_layout()
+    plt.savefig(filename+'.png')
     plt.show()
 
 
@@ -194,19 +195,21 @@ if __name__ == "__main__":
     ser2 = serial.Serial('COM5', 115200, timeout=1)
     time.sleep(2)
     setting = 5
+    freq = 1
+    theta = 0
 
     while True:
         try:
-            #filename = str(input('Enter trial name:\n'))
             setting = int(input('Start: [1]\nExit: [0]\n'))
             if setting == 1:
-                freq = float(input('Enter active grid frequency (Hz):\n'))
+                filename = 'Data/'+str(input('Enter trial name:\n'))
+                # freq = float(input('Enter active grid frequency (Hz):\n')) TEMP
                 theta = int(input('Enter encoder trigger angle (°):\n'))
         except ValueError:
             print('ERROR')
             continue
         if setting == 1:
-            controlValve(ser)
+            #controlValve(ser)
             print('Letting liquid settle...')
             # time.sleep(10)  # let liquid settle - Re 60k: 15s, Re 100k: 10s
             try:

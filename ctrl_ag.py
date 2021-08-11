@@ -5,7 +5,7 @@
 import serial
 import time
 import csv
-import datetime
+#import datetime
 from threading import Thread
 import matplotlib.pyplot as plt
 import pandas as pd

@@ -88,8 +88,8 @@ void loop()
   //set attemps counter at 0 so we can try again if we get bad position
   attempts = 0;
 
-  int camOutput = analogRead(CAMOUT);
-  float voltage = camOutput * (5.0 / 1023.0);
+  //int camOutput = analogRead(CAMOUT);
+  //float voltage = camOutput * (5.0 / 1023.0);
 
   //this function gets the encoder position and returns it as a uint16_t
   //send the function either res12 or res14 for your encoders resolution
@@ -128,9 +128,9 @@ void loop()
       theta = 0;
     }
 
-    Serial.print(theta, DEC); //print the position in decimal format
-    Serial.print("\t");
-    Serial.println(voltage);
+    Serial.println(theta, DEC); //print the position in decimal format
+    //Serial.print("\t");
+    //Serial.println(voltage);
   }
 
   //For the purpose of this demo we don't need the position returned that quickly so let's wait a half second between reads

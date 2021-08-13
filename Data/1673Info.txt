@@ -1,5 +1,0 @@
-Smoke delay from PFV4: 1.0 s
-Time for frame of interest to test accuracy from PFV4: 2.0 s
-Start of phase: 19.814634599999998 s
-Start of phase with accuracy test: 20.814634599999998 s
-Measured frequency: 1 Hz

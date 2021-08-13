@@ -9,6 +9,7 @@ from datetime import datetime
 from threading import Thread
 import matplotlib.pyplot as plt
 import pandas as pd
+import statistics
 
 
 def controlValve(ser):
@@ -61,6 +62,7 @@ def readEnc(loops, filename, freq, theta):
     trigT = 0
     period = 1/freq
     lt = 0
+    lst = []
 
     print('READING AND SAVING DATA...')
 
@@ -70,13 +72,17 @@ def readEnc(loops, filename, freq, theta):
         if line:
             try:
                 # updating values
-                string = line.decode()  # convert the byte string to a unicode string
-                linelist = string.split('\t')
+                s = line.decode()  # convert the byte string to a unicode string
+                s2 = s.strip('\r\n')
+                angle = int(s2)
+                ser2.reset_input_buffer()
+                ser2.reset_output_buffer()
+                #linelist = string.split('\t')
                 # convert the unicode string to an int
                 # print(linelist)
-                angle = int(linelist[0])
-                if len(linelist) > 1:
-                    voltage = float(linelist[1])
+                #angle = int(linelist[0])
+                #if len(linelist) > 1:
+                    #voltage = float(linelist[1])
                 # print(str(angle)+'\t'+str(voltage))
 
                 # if voltage > 4:
@@ -93,12 +99,12 @@ def readEnc(loops, filename, freq, theta):
                 angle_list.append(angle)
                 iteration_list.append(iteration)
 
-                if iteration == 1000 and not completed:  # trigger
+                if iteration == 500 and not completed:  # trigger
                     # time.sleep(delay)
                     t0 = Thread(target=controlValve, args=(ser,))
                     t0.start()
 
-                if iteration == 1200 and not completed:  # trigger
+                if iteration == 700 and not completed:  # trigger
                     # time.sleep(delay)
                     t1 = Thread(target=controlCam, args=(ser,))
                     t2 = Thread(target=controlWire, args=(ser,))
@@ -110,12 +116,15 @@ def readEnc(loops, filename, freq, theta):
 
                 if completed and (t > (trigT+7)):
                     break
-
+                lend = datetime.now().timestamp()
+                lt = lend-lstart
+                lst.append(lt)
+                #time.sleep(0.01-lt)
             except ValueError:
                 print('ERROR')
-        lend = datetime.now().timestamp()
-        lt = lend-lstart
-        time.sleep(0.01-lt)
+        
+    #print('avg:', sum(lst) / len(lst))
+    #print('stdev:',statistics.stdev(lst))
 
     if not completed:
         print('ERROR, position range not detected')
@@ -141,7 +150,7 @@ def readEnc(loops, filename, freq, theta):
         print('Start of test phase of interest:', phaseTestStart, 's')
         create_csv(filename, t_list, angle_list, iteration_list)
         create_plt(filename)
-        #freq = get_frequency_from_interpolation(filename)
+        freq = get_frequency_from_interpolation(filename)
         create_txt(filename, smokeDelay, phaseStart,
                    interval, testFrame, freq)
         print()
@@ -268,7 +277,7 @@ if __name__ == '__main__':
     setting = 5
     freq = 1
     theta = 0
-    filename = 'Data/1673'
+    filename = 'Data/test'
 
     while True:
         try:

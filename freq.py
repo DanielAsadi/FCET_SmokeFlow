@@ -29,4 +29,4 @@ def get_frequency_from_interpolation(filename):
     print("The frequency is", round(1 / delta_t_avg, decimal_places), "Hz")
 
 if __name__ == "__main__":
-    get_frequency_from_interpolation('Data/1673.csv')
+    get_frequency_from_interpolation('Data/test.csv')

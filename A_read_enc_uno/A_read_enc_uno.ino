@@ -79,7 +79,7 @@ void setup()
   //start SPI bus
   SPI.begin();
   //if you want to set the zero position before beggining uncomment the following function call
-  setZeroSPI(ENC_0);
+  //setZeroSPI(ENC_0);
   //setZeroSPI(ENC_1);
 }
 
@@ -135,7 +135,7 @@ void loop()
 
   //For the purpose of this demo we don't need the position returned that quickly so let's wait a half second between reads
   //delay() is in milliseconds
-  delay(50);
+  delay(10);
 }
 
 /*

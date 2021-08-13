@@ -14,7 +14,7 @@ import pandas as pd
 def controlValve(ser):
     ser.write(b'A')  # high
     print('VALVE OPEN')
-    time.sleep(2)  # valve duration
+    time.sleep(7)  # valve duration
     ser.write(b'B')  # low
     print('VALVE CLOSED')
 
@@ -34,7 +34,7 @@ def controlCam(ser):
 def controlWire(ser):
     ser.write(b'E')  # high
     print('WIRE ON')
-    time.sleep(2)  # wire duration - Re 60k: 2s, Re 100k: 1.5s
+    time.sleep(5)  # wire duration - Re 60k: 2s, Re 100k: 1.5s
     ser.write(b'F')  # low
     print('WIRE OFF')
 
@@ -83,7 +83,7 @@ def readEnc(loops, filename, freq, theta):
                     #t2 = datetime.datetime.utcnow()
                     #timest = t2-t1
                     #print(str(freq)+' Hz:\t'+str(timest))
-                    #f = open("camDelay.txt", "a")
+                    #f = open('camDelay.txt', 'a')
                     # f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
                     # f.close()
                 iteration += 1
@@ -93,7 +93,12 @@ def readEnc(loops, filename, freq, theta):
                 angle_list.append(angle)
                 iteration_list.append(iteration)
 
-                if iteration == 500 and not completed:  # trigger
+                if iteration == 1000 and not completed:  # trigger
+                    # time.sleep(delay)
+                    t0 = Thread(target=controlValve, args=(ser,))
+                    t0.start()
+
+                if iteration == 1200 and not completed:  # trigger
                     # time.sleep(delay)
                     t1 = Thread(target=controlCam, args=(ser,))
                     t2 = Thread(target=controlWire, args=(ser,))
@@ -103,14 +108,14 @@ def readEnc(loops, filename, freq, theta):
                     print('Triggered at: '+str(trigT)+' s')
                     completed = True
 
-                if completed and (t > (trigT+5)):
+                if completed and (t > (trigT+7)):
                     break
 
             except ValueError:
                 print('ERROR')
         lend = datetime.now().timestamp()
         lt = lend-lstart
-        # time.sleep(0.01-lt)
+        time.sleep(0.01-lt)
 
     if not completed:
         print('ERROR, position range not detected')
@@ -144,7 +149,7 @@ def readEnc(loops, filename, freq, theta):
 
 def create_csv(filename, t_list, angle_list, iteration_list):
     iteration = 1
-    fieldnames = ["t", "angle", "iteration"]
+    fieldnames = ['t', 'angle', 'iteration']
     filename = filename+'.csv'
 
     with open(filename, 'w') as csv_file:
@@ -157,9 +162,9 @@ def create_csv(filename, t_list, angle_list, iteration_list):
             csv_writer = csv.DictWriter(
                 csv_file, fieldnames=fieldnames)
             info = {
-                "t": t,
-                "angle": angle,
-                "iteration": iteration
+                't': t,
+                'angle': angle,
+                'iteration': iteration
             }
             csv_writer.writerow(info)
 
@@ -237,7 +242,9 @@ def get_frequency_from_interpolation(filename):
         delta_t_avg += (rising_midpoints[index_freq + 1] -
                         rising_midpoints[index_freq]) / (len(rising_midpoints) - 1)
 
-    print("The frequency is", round(1 / delta_t_avg, decimal_places), "Hz")
+    freq = round(1 / delta_t_avg, decimal_places)
+    print('The frequency is', freq, 'Hz')
+    return freq
 
 
 def emergencyStop(ser):
@@ -253,7 +260,7 @@ def emergencyStop(ser):
     quit()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     # make sure the 'COM#' is set according the Windows Device Manager
     ser = serial.Serial('COM7', 115200, timeout=1)
     ser2 = serial.Serial('COM5', 115200, timeout=0.01)
@@ -261,7 +268,7 @@ if __name__ == "__main__":
     setting = 5
     freq = 1
     theta = 0
-    filename = 'Data/1673b'
+    filename = 'Data/1673'
 
     while True:
         try:
@@ -274,8 +281,8 @@ if __name__ == "__main__":
             print('ERROR')
             continue
         if setting == 1:
-            controlValve(ser)
-            print('Letting liquid settle...')
+            # controlValve(ser)
+            #print('Letting liquid settle...')
             # time.sleep(10)  # let liquid settle - Re 60k: 15s, Re 100k: 10s
             try:
                 # retry dispensing liquid

@@ -48,8 +48,7 @@ def controlCap(ser):  # not included in circuit yet
     print('CAP CHARGING')
 
 
-def readEnc(loops, filename, freq, theta):
-    # initializng csv values
+def readEnc(loops, filename, freq, theta):  # fix delay
     start = datetime.now().timestamp()
     iteration = 0
     completed = False
@@ -123,7 +122,7 @@ def readEnc(loops, filename, freq, theta):
             except ValueError:
                 print('ERROR')
 
-    #print('avg:', sum(lst) / len(lst))
+    # print('avg:', sum(lst) / len(lst))
     # print('stdev:',statistics.stdev(lst))
 
     if not completed:
@@ -178,7 +177,7 @@ def create_csv(filename, t_list, angle_list, iteration_list):
             csv_writer.writerow(info)
 
 
-def create_plt(filename):  # calculate freq, convert time axis to phase, increase axis tics, fix inital plot values issue
+def create_plt(filename):  # convert time axis to phase
     data = pd.read_csv(filename+'.csv')
     plt.rcParams['font.size'] = '4'
     x = data['t']

@@ -223,7 +223,7 @@ def create_txt(filename, smokeDelay, phaseStart, interval, testFrame, freq):
 
 
 def get_frequency_from_interpolation(filename):
-    data = pd.read_csv(filename)
+    data = pd.read_csv(filename+'.csv')
     x = data['t']
     y = data['angle']
     choose_angle = 45
@@ -278,7 +278,7 @@ if __name__ == '__main__':
     setting = 5
     freq = 1
     theta = 0
-    filename = 'Data/test'
+    filename = 'Data/test167'
 
     while True:
         try:

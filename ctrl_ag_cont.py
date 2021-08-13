@@ -81,17 +81,17 @@ def readEnc(loops, filename, freq, theta):
                 # convert the unicode string to an int
                 # print(linelist)
                 #angle = int(linelist[0])
-                #if len(linelist) > 1:
-                    #voltage = float(linelist[1])
+                # if len(linelist) > 1:
+                #voltage = float(linelist[1])
                 # print(str(angle)+'\t'+str(voltage))
 
                 # if voltage > 4:
-                    #t2 = datetime.datetime.utcnow()
-                    #timest = t2-t1
-                    #print(str(freq)+' Hz:\t'+str(timest))
-                    #f = open('camDelay.txt', 'a')
-                    # f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
-                    # f.close()
+                #t2 = datetime.datetime.utcnow()
+                #timest = t2-t1
+                #print(str(freq)+' Hz:\t'+str(timest))
+                #f = open('camDelay.txt', 'a')
+                # f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
+                # f.close()
                 iteration += 1
                 end = datetime.now().timestamp()
                 t = round(end-start, 5)  # update time
@@ -119,12 +119,12 @@ def readEnc(loops, filename, freq, theta):
                 lend = datetime.now().timestamp()
                 lt = lend-lstart
                 lst.append(lt)
-                #time.sleep(0.01-lt)
+                # time.sleep(0.01-lt)
             except ValueError:
                 print('ERROR')
-        
+
     #print('avg:', sum(lst) / len(lst))
-    #print('stdev:',statistics.stdev(lst))
+    # print('stdev:',statistics.stdev(lst))
 
     if not completed:
         print('ERROR, position range not detected')
@@ -224,27 +224,29 @@ def create_txt(filename, smokeDelay, phaseStart, interval, testFrame, freq):
 
 
 def get_frequency_from_interpolation(filename):
-    data = pd.read_csv(filename+'.csv')
+    data = pd.read_csv(filename)
     x = data['t']
     y = data['angle']
     choose_angle = 45
     rising_midpoints = []
     decimal_places = 3
     delta_t_avg = 0
+    buffer = 1  # 1 or 2
 
-    for index_freq in range(0, len(y) - 2):
+    for index_freq in range(0, len(y) - buffer):
 
-        if y[index_freq] < choose_angle < y[index_freq + 2]:
+        if y[index_freq] < choose_angle < y[index_freq + buffer]:
 
-            m = (y[index_freq + 2] - y[index_freq]) / \
-                (x[index_freq + 2] - x[index_freq])
-            b = y[index_freq + 2] - m * x[index_freq + 2]
+            m = (y[index_freq + buffer] - y[index_freq]) / \
+                (x[index_freq + buffer] - x[index_freq])
+            b = y[index_freq + buffer] - m * x[index_freq + buffer]
             rising_midpoints.append(
                 round((choose_angle - b) / m, decimal_places))
 
-        elif y[index_freq + 2] == choose_angle and y[index_freq] < choose_angle:
+        elif y[index_freq + buffer] == choose_angle and y[index_freq] < choose_angle:
 
-            rising_midpoints.append(round(x[index_freq + 2], decimal_places))
+            rising_midpoints.append(
+                round(x[index_freq + buffer], decimal_places))
 
     for index_freq in range(0, len(rising_midpoints) - 1):
 

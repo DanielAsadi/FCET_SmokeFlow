@@ -9,18 +9,19 @@ def get_frequency_from_interpolation(filename):
     rising_midpoints = []
     decimal_places = 3
     delta_t_avg = 0
+    buffer = 1 # 1 or 2
+    
+    for index_freq in range(0, len(y) - buffer):
 
-    for index_freq in range(0, len(y) - 2):
+        if y[index_freq] < choose_angle < y[index_freq + buffer]:
 
-        if y[index_freq] < choose_angle < y[index_freq + 2]:
-
-            m = (y[index_freq + 2] - y[index_freq]) / (x[index_freq + 2] - x[index_freq])
-            b = y[index_freq + 2] - m * x[index_freq + 2]
+            m = (y[index_freq + buffer] - y[index_freq]) / (x[index_freq + buffer] - x[index_freq])
+            b = y[index_freq + buffer] - m * x[index_freq + buffer]
             rising_midpoints.append(round((choose_angle - b) / m, decimal_places))
 
-        elif y[index_freq + 2] == choose_angle and y[index_freq] < choose_angle:
+        elif y[index_freq + buffer] == choose_angle and y[index_freq] < choose_angle:
 
-            rising_midpoints.append(round(x[index_freq + 2], decimal_places))
+            rising_midpoints.append(round(x[index_freq + buffer], decimal_places))
 
     for index_freq in range(0, len(rising_midpoints) - 1):
 

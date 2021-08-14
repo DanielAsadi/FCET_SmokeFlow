@@ -10,13 +10,12 @@ from threading import Thread
 import matplotlib.pyplot as plt
 import pandas as pd
 import math
-#import statistics
 
 # add function to calculate f before
 
 f = 4.796
 p = 1/f
-cDelay = 0.2
+cDelay = 0.2  # cam trigger delay
 recDelay = cDelay + 1
 NcycDelay = math.ceil(recDelay/p)
 filename = 'Data/1676'
@@ -31,7 +30,7 @@ def controlValve(ser):
 
 
 def controlCam(ser):
-    time.sleep(NcycDelay*p-cDelay)  # cam starts 1.8s after wire
+    time.sleep(NcycDelay*p-cDelay)
     ser.write(b'C')  # high
     time.sleep(0.1)
     ser.write(b'D')  # low
@@ -103,7 +102,6 @@ def readEnc(loops, filename, freq, theta):
 
                 if completed and (t > (trigT+7)):
                     break
-
             except ValueError:
                 print('ERROR')
 
@@ -179,11 +177,8 @@ def create_plt(filename):  # convert time axis to phase
     plt.xticks(rotation=60)
     plt.xticks(x_plt)
     plt.plot(x, y, linewidth=1)
-    # plt.tight_layout()
     fig = plt.gcf()
     fig.set_size_inches(6.4, 3.6)
-    #figManager = plt.get_current_fig_manager()
-    # figManager.window.state('zoomed')
     plt.savefig(filename+'.png', dpi=300)
     plt.show()
 

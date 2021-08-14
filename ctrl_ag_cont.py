@@ -9,18 +9,29 @@ from datetime import datetime
 from threading import Thread
 import matplotlib.pyplot as plt
 import pandas as pd
-import statistics
+import math
+#import statistics
+
+# add function to calculate f before
+
+f = 4.796
+p = 1/f
+cDelay = 0.2
+recDelay = cDelay + 1
+NcycDelay = math.ceil(recDelay/p)
+filename = 'Data/1676'
 
 
 def controlValve(ser):
     ser.write(b'A')  # high
     print('VALVE OPEN')
-    time.sleep(7)  # valve duration
+    time.sleep(12)  # valve duration
     ser.write(b'B')  # low
     print('VALVE CLOSED')
 
 
 def controlCam(ser):
+    time.sleep(NcycDelay*p-cDelay)  # cam starts 1.8s after wire
     ser.write(b'C')  # high
     time.sleep(0.1)
     ser.write(b'D')  # low
@@ -48,25 +59,18 @@ def controlCap(ser):  # not included in circuit yet
     print('CAP CHARGING')
 
 
-def readEnc(loops, filename, freq, theta):  # fix delay
+def readEnc(loops, filename, freq, theta):
     start = datetime.now().timestamp()
     iteration = 0
     completed = False
-    linelist = []
     t_list = []
     angle_list = []
     iteration_list = []
-    voltage = 0
-    camDelay = 0.0037046
     trigT = 0
-    period = 1/freq
-    lt = 0
-    lst = []
 
     print('READING AND SAVING DATA...')
 
     for i in range(loops):
-        lstart = datetime.now().timestamp()
         line = ser2.readline()  # read a byte
         if line:
             try:
@@ -76,21 +80,7 @@ def readEnc(loops, filename, freq, theta):  # fix delay
                 angle = int(s2)
                 ser2.reset_input_buffer()
                 ser2.reset_output_buffer()
-                #linelist = string.split('\t')
-                # convert the unicode string to an int
-                # print(linelist)
-                #angle = int(linelist[0])
-                # if len(linelist) > 1:
-                #voltage = float(linelist[1])
-                # print(str(angle)+'\t'+str(voltage))
 
-                # if voltage > 4:
-                #t2 = datetime.datetime.utcnow()
-                #timest = t2-t1
-                #print(str(freq)+' Hz:\t'+str(timest))
-                #f = open('camDelay.txt', 'a')
-                # f.write(str(freq)+'Hz:\t'+str(timest)+'\n')
-                # f.close()
                 iteration += 1
                 end = datetime.now().timestamp()
                 t = round(end-start, 5)  # update time
@@ -98,32 +88,24 @@ def readEnc(loops, filename, freq, theta):  # fix delay
                 angle_list.append(angle)
                 iteration_list.append(iteration)
 
-                if iteration == 500 and not completed:  # trigger
-                    # time.sleep(delay)
+                if iteration == 400 and not completed:  # valve trigger
                     t0 = Thread(target=controlValve, args=(ser,))
                     t0.start()
 
-                if iteration == 700 and not completed:  # trigger
-                    # time.sleep(delay)
+                if 0 <= angle <= 1 and not completed and iteration >= 1000:  # cam + wire trigger
                     t1 = Thread(target=controlCam, args=(ser,))
                     t2 = Thread(target=controlWire, args=(ser,))
                     t1.start()
                     t2.start()
-                    trigT = t
-                    print('Triggered at: '+str(trigT)+' s')
+                    trigT = t + NcycDelay * p - cDelay + 0.2
+                    print('Cam triggered at: '+str(trigT)+' s')
                     completed = True
 
                 if completed and (t > (trigT+7)):
                     break
-                lend = datetime.now().timestamp()
-                lt = lend-lstart
-                lst.append(lt)
-                # time.sleep(0.01-lt)
+
             except ValueError:
                 print('ERROR')
-
-    # print('avg:', sum(lst) / len(lst))
-    # print('stdev:',statistics.stdev(lst))
 
     if not completed:
         print('ERROR, position range not detected')
@@ -138,20 +120,16 @@ def readEnc(loops, filename, freq, theta):  # fix delay
         except ValueError:
             print('ERROR')
     if setting == 1:
-        smokeDelay = float(
-            input('Enter measured smoke delay from PFV4:\n'))
         testFrame = float(
             input('Enter time for frame of interest to test accuracy from PFV4:\n'))
-        phaseStart = trigT+camDelay+smokeDelay
-        interval = testFrame-smokeDelay
-        phaseTestStart = phaseStart+interval
-        print('Start of phase:', phaseStart, 's')
+        phaseTestStart = trigT + testFrame
+        print('Start of phase:', trigT, 's')
         print('Start of test phase of interest:', phaseTestStart, 's')
+
         create_csv(filename, t_list, angle_list, iteration_list)
         create_plt(filename)
         freq = get_frequency_from_interpolation(filename)
-        create_txt(filename, smokeDelay, phaseStart,
-                   interval, testFrame, freq)
+        create_txt(filename, trigT, freq)
         print()
 
 
@@ -210,15 +188,10 @@ def create_plt(filename):  # convert time axis to phase
     plt.show()
 
 
-def create_txt(filename, smokeDelay, phaseStart, interval, testFrame, freq):
+def create_txt(filename, trigT, freq):
     f = open(filename+'Info.txt', 'w')
-    f.write('Smoke delay from PFV4: '+str(smokeDelay)+' s\n')
-    f.write('Time for frame of interest to test accuracy from PFV4: ' +
-            str(testFrame)+' s\n')
-    f.write('Start of phase: '+str(phaseStart)+' s\n')
-    f.write('Start of phase with accuracy test: ' +
-            str(phaseStart+interval)+' s\n')
     f.write('Measured frequency: '+str(freq)+' Hz\n')
+    f.write('Trigger start at 0 deg: '+str(trigT)+' s\n')
     f.close()
 
 
@@ -276,9 +249,9 @@ if __name__ == '__main__':
     ser2 = serial.Serial('COM5', 115200, timeout=0.01)
     time.sleep(2)
     setting = 5
-    freq = 1
+    #freq = 1
     theta = 0
-    filename = 'Data/test167'
+    #filename = 'Data/1671'
 
     while True:
         try:
@@ -304,7 +277,7 @@ if __name__ == '__main__':
             if setting == 2:
                 continue
             else:
-                readEnc(2000, filename, freq, theta)
+                readEnc(2000, filename, f, theta)
                 print()
         elif setting == 0:
             emergencyStop(ser)

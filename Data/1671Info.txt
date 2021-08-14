@@ -1,0 +1,6 @@
+Smoke delay from PFV4: 1.0 s
+Time for frame of interest to test accuracy from PFV4: 2.0 s
+Start of phase: 10.442246281534723 s
+Start of phase with accuracy test: 11.442246281534723 s
+Measured frequency: 0.383 Hz vs matlab 0.356155 Hz
+Trigger start at 0 deg: 9.242246281534724 s

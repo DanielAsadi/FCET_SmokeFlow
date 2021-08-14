@@ -38,15 +38,17 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **Data**: Encoder data csv and graph files
 * **Media**: Setup diagrams and other pictures
 * **__pycache__**: Python cache files
-* **control_V1.py**: Version 1 of Python control code
-* **ctrl_ag_V1.py**: Version 1 of Python control code for unsteady case with active grid and encoder
-* **ctrl_ag.py**: Python control code for unsteady case with active grid and encoder and graphing ability
-* **ctrl_man.py**: Python control code with componenets manually triggered on/off by user
-* **ctrl_seq.py**: Python control code with timed sequence controlling all compoenents automatically
 * **create_csv.py**: Creates csv for encoder data
 * **create_plot.py**: Creates graph for encoder data
+* **ctrl_V1.py**: Version 1 of Python control code
+* **ctrl_ag.py**: Python control code for unsteady case with active grid and encoder and graphing ability in burst mode
+* **ctrl_ag_V1.py**: Version 1 of Python control code for unsteady case with active grid and encoder
+* **ctrl_ag_cont.py**: Python control code for unsteady case with active grid and encoder and graphing ability in continuous mode
 * **ctrl_ag_live.py**: Runs control_ag2.py and create_plot.py for live plotting using threading and subprocess
-
+* **ctrl_man.py**: Python control code with componenets manually triggered on/off by user
+* **ctrl_seq.py**: Python control code with timed sequence controlling all compoenents automatically
+* **freq.py**: Interpolates frequency from encoder graph
+* **testEnc.py**: Code for just running and testing encoder output performance
 
 ## Version Status
 ### v1.0

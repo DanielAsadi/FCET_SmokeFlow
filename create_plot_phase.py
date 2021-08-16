@@ -1,21 +1,21 @@
-#Daniel Asadi
-#Eng Sci 2T3
-#FCET Lab, UTIAS
+# Daniel Asadi
+# Eng Sci 2T3
+# FCET Lab, UTIAS
 
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 import pandas as pd
-from itertools import count
+import numpy as np
 
-filename = 'Data/1671'
+filename = 'Data/1676'
+
 
 def create_plt(filename):  # convert time axis to phase
     data = pd.read_csv(filename+'.csv')
     plt.rcParams['font.size'] = '4'
     x = data['t']
     y = data['angle']
-    plt.xlabel('Time')
-    plt.ylabel('Encoder angle')
+    plt.xlabel('Phase angle (deg)')
+    plt.ylabel('Encoder angle (deg)')
 
     x_angle = []
 
@@ -23,16 +23,17 @@ def create_plt(filename):  # convert time axis to phase
     frequency_rad = 360 * frequency_Hz
 
     for t in x:
-
         t_angle = t * frequency_rad
         x_angle.append(t_angle)
 
+    plt.xticks(np.arange(min(x_angle), max(x_angle)+1, 360))
     plt.xticks(rotation=60)
     plt.plot(x_angle, y, linewidth=1)
     fig = plt.gcf()
     fig.set_size_inches(6.4, 3.6)
     plt.savefig(filename+'phase.png', dpi=300)
     plt.show()
+
 
 def get_frequency_from_interpolation(filename):
     data = pd.read_csv(filename+'.csv')
@@ -67,6 +68,7 @@ def get_frequency_from_interpolation(filename):
     freq = round(1 / delta_t_avg, decimal_places)
     print('The frequency is', freq, 'Hz')
     return freq
+
 
 if __name__ == "__main__":
     create_plt(filename)

@@ -164,17 +164,7 @@ def create_plt(filename):  # convert time axis to phase
     if_append = 0
     index_plt = 1
 
-    x_angle = []
-
-    frequency_Hz = get_frequency_from_interpolation(filename)
-    frequency_rad = 360 * frequency_Hz
-
     for t in x:
-
-        t_angle = t * frequency_rad
-        x_angle.append(t_angle)
-
-    for t_angle in x_angle:
         if if_append:
             x_plt.append(t)
             if_append = 0
@@ -186,7 +176,7 @@ def create_plt(filename):  # convert time axis to phase
 
     plt.xticks(rotation=60)
     plt.xticks(x_plt)
-    plt.plot(x_angle, y, linewidth=1)
+    plt.plot(x, y, linewidth=1)
     fig = plt.gcf()
     fig.set_size_inches(6.4, 3.6)
     plt.savefig(filename+'.png', dpi=300)

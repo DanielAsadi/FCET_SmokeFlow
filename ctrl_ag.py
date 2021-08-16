@@ -154,8 +154,8 @@ def create_plt(filename):  # convert time axis to phase
     plt.rcParams['font.size'] = '4'
     x = data['t']
     y = data['angle']
-    plt.xlabel('Time')
-    plt.ylabel('Encoder angle')
+    plt.xlabel('Time [s]')
+    plt.ylabel('Encoder angle [deg]')
     x_plt = []
     if_append = 0
     index_plt = 1

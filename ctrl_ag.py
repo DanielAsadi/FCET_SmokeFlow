@@ -14,7 +14,7 @@ import math
 # add function to calculate f before
 
 matlab_freq = 4.796
-filename = 'Data/1677'
+filename = 'Data/1677/1677'
 
 
 def controlValve(ser):

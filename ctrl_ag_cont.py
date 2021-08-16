@@ -18,7 +18,7 @@ p = 1/f
 cDelay = 0.2  # cam trigger delay
 recDelay = cDelay + 1
 NcycDelay = math.ceil(recDelay/p)
-filename = 'Data/1676'
+filename = 'Data/1677/1677'
 
 
 def controlValve(ser):
@@ -59,8 +59,6 @@ def controlCap(ser):  # not included in circuit yet
 
 
 def readEnc(loops, filename, freq, theta):
-    start = datetime.now().timestamp()
-    iteration = 0
     completed = False
     t_list = []
     angle_list = []
@@ -68,6 +66,7 @@ def readEnc(loops, filename, freq, theta):
     trigT = 0
 
     print('READING AND SAVING DATA...')
+    start = datetime.now().timestamp()
 
     for i in range(loops):
         line = ser2.readline()  # read a byte
@@ -80,18 +79,18 @@ def readEnc(loops, filename, freq, theta):
                 ser2.reset_input_buffer()
                 ser2.reset_output_buffer()
 
-                iteration += 1
+                i += 1
                 end = datetime.now().timestamp()
                 t = round(end-start, 5)  # update time
                 t_list.append(t)
                 angle_list.append(angle)
-                iteration_list.append(iteration)
+                iteration_list.append(i)
 
-                if iteration == 400 and not completed:  # valve trigger
+                if i == 400 and not completed:  # valve trigger
                     t0 = Thread(target=controlValve, args=(ser,))
                     t0.start()
 
-                if 0 <= angle <= 1 and not completed and iteration >= 1000:  # cam + wire trigger
+                if 0 <= angle <= 1 and not completed and i >= 1000:  # cam + wire trigger
                     t1 = Thread(target=controlCam, args=(ser,))
                     t2 = Thread(target=controlWire, args=(ser,))
                     t1.start()
@@ -127,6 +126,7 @@ def readEnc(loops, filename, freq, theta):
         create_csv(filename, t_list, angle_list, iteration_list)
         create_plt(filename)
         freq = get_frequency_from_interpolation(filename)
+        print('The frequency is', freq, 'Hz')
         create_txt(filename, trigT, freq)
         print()
 
@@ -158,8 +158,8 @@ def create_plt(filename):  # convert time axis to phase
     plt.rcParams['font.size'] = '4'
     x = data['t']
     y = data['angle']
-    plt.xlabel('Time')
-    plt.ylabel('Encoder angle')
+    plt.xlabel('Time [s]')
+    plt.ylabel('Encoder angle [deg]')
     x_plt = []
     if_append = 0
     index_plt = 1
@@ -184,8 +184,8 @@ def create_plt(filename):  # convert time axis to phase
 
 
 def create_txt(filename, trigT, freq):
-    f = open(filename+'Info.txt', 'w')
-    f.write('Measured frequency: '+str(freq)+' Hz\n')
+    f = open(filename+'.txt', 'w')
+    f.write('Measured frequency: '+str(freq)+' Hz vs matlab '+str(f)+' Hz\n')
     f.write('Trigger start at 0 deg: '+str(trigT)+' s\n')
     f.close()
 
@@ -221,7 +221,6 @@ def get_frequency_from_interpolation(filename):
                         rising_midpoints[index_freq]) / (len(rising_midpoints) - 1)
 
     freq = round(1 / delta_t_avg, decimal_places)
-    print('The frequency is', freq, 'Hz')
     return freq
 
 

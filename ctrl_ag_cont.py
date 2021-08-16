@@ -13,18 +13,19 @@ import math
 
 # add function to calculate f before
 
-f = 4.796
+matlab_freq = 1.377641
+f = 1.40782
 p = 1/f
 cDelay = 0.2  # cam trigger delay
-recDelay = cDelay + 1
+recDelay = cDelay + 1 #can add delay here
 NcycDelay = math.ceil(recDelay/p)
-filename = 'Data/1677/1677'
+filename = 'Data/1682'
 
 
 def controlValve(ser):
     ser.write(b'A')  # high
     print('VALVE OPEN')
-    time.sleep(12)  # valve duration
+    time.sleep(10)  # valve duration
     ser.write(b'B')  # low
     print('VALVE CLOSED')
 
@@ -185,7 +186,7 @@ def create_plt(filename):  # convert time axis to phase
 
 def create_txt(filename, trigT, freq):
     f = open(filename+'.txt', 'w')
-    f.write('Measured frequency: '+str(freq)+' Hz vs matlab '+str(f)+' Hz\n')
+    f.write('Measured frequency: '+str(freq)+' Hz vs matlab '+str(matlab_freq)+' Hz\n')
     f.write('Trigger start at 0 deg: '+str(trigT)+' s\n')
     f.close()
 
@@ -196,7 +197,7 @@ def get_frequency_from_interpolation(filename):
     y = data['angle']
     choose_angle = 45
     rising_midpoints = []
-    decimal_places = 3
+    decimal_places = 5
     delta_t_avg = 0
     buffer = 1  # 1 or 2
 

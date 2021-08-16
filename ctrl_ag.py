@@ -14,7 +14,7 @@ import math
 # add function to calculate f before
 
 matlab_freq = 4.796
-filename = 'Data/1677/1677'
+filename = 'Data/1683b'
 
 
 def controlValve(ser):
@@ -63,7 +63,7 @@ def readEnc(loops, filename, freq):
 
     p = 1/freq
     cDelay = 0.2  # cam trigger delay
-    recDelay = cDelay + 0.5
+    recDelay = cDelay #can add delay here
     NcycDelay = math.ceil(recDelay/p)
     camDelay = NcycDelay*p-cDelay
 
@@ -215,7 +215,7 @@ def get_frequency_from_interpolation():
 
     choose_angle = 45
     rising_midpoints = []
-    decimal_places = 3
+    decimal_places = 5
     delta_t_avg = 0
     buffer = 1  # 1 or 2
 
@@ -265,6 +265,8 @@ if __name__ == "__main__":
 
     while True:
         try:
+            freq = get_frequency_from_interpolation()
+            print('The frequency is', freq, 'Hz')
             setting = int(input('Start: [1]\nExit: [0]\n'))
         except ValueError:
             print('ERROR')
@@ -283,8 +285,6 @@ if __name__ == "__main__":
             if setting == 2:
                 continue
             else:
-                freq = get_frequency_from_interpolation()
-                print('The frequency is', freq, 'Hz')
                 readEnc(2000, filename, freq)
                 print()
         elif setting == 0:

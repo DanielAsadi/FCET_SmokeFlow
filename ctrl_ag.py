@@ -2,6 +2,7 @@
 # Eng Sci 2T3
 # FCET Lab, UTIAS
 
+from numpy import mat
 import serial
 import time
 import csv
@@ -13,12 +14,8 @@ import math
 
 # add function to calculate f before
 
-f = 4.796
-p = 1/f
-cDelay = 0.2  # cam trigger delay
-recDelay = cDelay + 0.5
-NcycDelay = math.ceil(recDelay/p)
-filename = 'Data/1676'
+matlab_freq = 4.796
+filename = 'Data/1677'
 
 
 def controlValve(ser):
@@ -29,8 +26,8 @@ def controlValve(ser):
     print('VALVE CLOSED')
 
 
-def controlCam(ser):
-    time.sleep(NcycDelay*p-cDelay)
+def controlCam(ser, camDelay):
+    time.sleep(camDelay)
     ser.write(b'C')  # high
     time.sleep(0.1)
     ser.write(b'D')  # low
@@ -58,19 +55,23 @@ def controlCap(ser):  # not included in circuit yet
     print('CAP CHARGING')
 
 
-def readEnc(loops, filename, freq, theta):
-    start = datetime.now().timestamp()
-    iteration = 0
+def readEnc(loops, filename, freq):
     completed = False
     t_list = []
     angle_list = []
     iteration_list = []
     trigT = 0
 
+    p = 1/freq
+    cDelay = 0.2  # cam trigger delay
+    recDelay = cDelay + 0.5
+    NcycDelay = math.ceil(recDelay/p)
+    camDelay = NcycDelay*p-cDelay
+
     print('READING AND SAVING DATA...')
+    start = datetime.now().timestamp()
 
     for i in range(loops):
-        lstart = datetime.now().timestamp()
         line = ser2.readline()  # read a byte
         if line:
             try:
@@ -81,15 +82,15 @@ def readEnc(loops, filename, freq, theta):
                 ser2.reset_input_buffer()
                 ser2.reset_output_buffer()
 
-                iteration += 1
+                i += 1
                 end = datetime.now().timestamp()
                 t = round(end-start, 5)  # update time
                 t_list.append(t)
                 angle_list.append(angle)
-                iteration_list.append(iteration)
+                iteration_list.append(i)
 
-                if iteration == 500 and not completed:  # trigger
-                    t1 = Thread(target=controlCam, args=(ser,))
+                if 0 <= angle <= 1 and not completed and i >= 500:  # trigger
+                    t1 = Thread(target=controlCam, args=(ser, camDelay,))
                     t2 = Thread(target=controlWire, args=(ser,))
                     t1.start()
                     t2.start()
@@ -123,7 +124,6 @@ def readEnc(loops, filename, freq, theta):
 
         create_csv(filename, t_list, angle_list, iteration_list)
         create_plt(filename)
-        freq = get_frequency_from_interpolation(filename)
         create_txt(filename, trigT, freq)
         print()
 
@@ -182,15 +182,38 @@ def create_plt(filename):  # convert time axis to phase
 
 def create_txt(filename, trigT, freq):
     f = open(filename+'Info.txt', 'w')
-    f.write('Measured frequency: '+str(freq)+' Hz\n')
+    f.write('Measured frequency: '+str(freq)+' Hz vs matlab '+str(f)+' Hz\n')
     f.write('Trigger start at 0 deg: '+str(trigT)+' s\n')
     f.close()
 
 
-def get_frequency_from_interpolation(filename):
-    data = pd.read_csv(filename+'.csv')
-    x = data['t']
-    y = data['angle']
+def get_frequency_from_interpolation():
+    print('Acquiring frequency...')
+    x = []
+    y = []
+    start = datetime.now().timestamp()
+
+    while True:
+        line = ser2.readline()  # read a byte
+        if line:
+            try:
+                # updating values
+                s = line.decode()  # convert the byte string to a unicode string
+                s2 = s.strip('\r\n')
+                angle = int(s2)
+                ser2.reset_input_buffer()
+                ser2.reset_output_buffer()
+
+                end = datetime.now().timestamp()
+                t = round(end-start, 5)  # update time
+                x.append(t)
+                y.append(angle)
+
+                if t > 10:
+                    break
+            except ValueError:
+                print('ERROR')
+
     choose_angle = 45
     rising_midpoints = []
     decimal_places = 3
@@ -218,7 +241,6 @@ def get_frequency_from_interpolation(filename):
                         rising_midpoints[index_freq]) / (len(rising_midpoints) - 1)
 
     freq = round(1 / delta_t_avg, decimal_places)
-    print('The frequency is', freq, 'Hz')
     return freq
 
 
@@ -241,17 +263,10 @@ if __name__ == "__main__":
     ser2 = serial.Serial('COM5', 115200, timeout=0.01)
     time.sleep(2)
     setting = 5
-    #freq = 1
-    theta = 0
-    #filename = 'Data/1671b'
 
     while True:
         try:
             setting = int(input('Start: [1]\nExit: [0]\n'))
-            # if setting == 1:
-            #filename = 'Data/'+str(input('Enter trial name:\n'))
-            # freq = float(input('Enter active grid frequency (Hz):\n')) TEMP
-            # theta = int(input('Enter encoder trigger angle (°):\n'))
         except ValueError:
             print('ERROR')
             continue
@@ -269,7 +284,9 @@ if __name__ == "__main__":
             if setting == 2:
                 continue
             else:
-                readEnc(2000, filename, f, theta)
+                freq = get_frequency_from_interpolation()
+                print('The frequency is', freq, 'Hz')
+                readEnc(2000, filename, freq)
                 print()
         elif setting == 0:
             emergencyStop(ser)

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-filename = 'Data/1676'
+filename = 'Data/1671'
 
 
 def create_plt(filename):  # convert time axis to phase
@@ -14,19 +14,30 @@ def create_plt(filename):  # convert time axis to phase
     plt.rcParams['font.size'] = '4'
     x = data['t']
     y = data['angle']
-    plt.xlabel('Phase angle (deg)')
-    plt.ylabel('Encoder angle (deg)')
+    plt.xlabel('Phase angle [deg]')
+    plt.ylabel('Encoder angle [deg]')
 
     x_angle = []
 
     frequency_Hz = get_frequency_from_interpolation(filename)
     frequency_rad = 360 * frequency_Hz
 
-    for t in x:
-        t_angle = t * frequency_rad
-        x_angle.append(t_angle)
+    for i in range(len(x)):
+        t = x[i]
+        angle = y[i]
+        if angle == min(y):
+            phaseShift = 360 - t * frequency_rad
+            break
+    print(phaseShift)
 
-    plt.xticks(np.arange(min(x_angle), max(x_angle)+1, 360))
+    for t in x:
+        t_angle = t * frequency_rad + phaseShift
+        x_angle.append(t_angle)
+    
+    print(x_angle.index(360))
+    print(x_angle)
+
+    plt.xticks(np.arange(0, max(x_angle)+1, 360))
     plt.xticks(rotation=60)
     plt.plot(x_angle, y, linewidth=1)
     fig = plt.gcf()

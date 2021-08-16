@@ -16,9 +16,6 @@ def create_plt(filename):  # convert time axis to phase
     y = data['angle']
     plt.xlabel('Time')
     plt.ylabel('Encoder angle')
-    x_plt = []
-    if_append = 0
-    index_plt = 1
 
     x_angle = []
 
@@ -30,18 +27,7 @@ def create_plt(filename):  # convert time axis to phase
         t_angle = t * frequency_rad
         x_angle.append(t_angle)
 
-    for t_angle in x_angle:
-        if if_append:
-            x_plt.append(t)
-            if_append = 0
-            index_plt = 1
-        else:
-            index_plt += 1
-            if index_plt == 20:
-                if_append = 1
-
     plt.xticks(rotation=60)
-    plt.xticks(x_plt)
     plt.plot(x_angle, y, linewidth=1)
     fig = plt.gcf()
     fig.set_size_inches(6.4, 3.6)

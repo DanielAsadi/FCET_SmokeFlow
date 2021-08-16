@@ -2,7 +2,6 @@
 # Eng Sci 2T3
 # FCET Lab, UTIAS
 
-from numpy import mat
 import serial
 import time
 import csv

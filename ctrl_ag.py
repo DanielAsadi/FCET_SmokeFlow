@@ -11,22 +11,22 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import math
 
-# add function to calculate f before
-
 matlab_freq = 0.349236
 filename = 'Data/1684b'
+valveDuration = 2
+wireDuration = 2
 
 
 def controlValve(ser):
     ser.write(b'A')  # high
     print('VALVE OPEN')
-    time.sleep(2)  # valve duration
+    time.sleep(valveDuration)  # valve duration
     ser.write(b'B')  # low
     print('VALVE CLOSED')
 
 
-def controlCam(ser, camDelay):
-    time.sleep(camDelay)
+def controlCam(ser, syncDelay):
+    time.sleep(syncDelay)
     ser.write(b'C')  # high
     time.sleep(0.1)
     ser.write(b'D')  # low
@@ -41,7 +41,7 @@ def controlCam(ser, camDelay):
 def controlWire(ser):
     ser.write(b'E')  # high
     print('WIRE ON')
-    time.sleep(2)  # wire duration - Re 60k: 2s, Re 100k: 1.5s
+    time.sleep(wireDuration)  # wire duration
     ser.write(b'F')  # low
     print('WIRE OFF')
 
@@ -63,9 +63,9 @@ def readEnc(loops, filename, freq):
 
     p = 1/freq
     cDelay = 0.2  # cam trigger delay
-    recDelay = cDelay #can add delay here
+    recDelay = cDelay  # can add delay here
     NcycDelay = math.ceil(recDelay/p)
-    camDelay = NcycDelay*p-cDelay
+    syncDelay = NcycDelay*p-cDelay  # delay to sync trigger at 0 deg
 
     print('READING AND SAVING DATA...')
     start = datetime.now().timestamp()
@@ -89,7 +89,7 @@ def readEnc(loops, filename, freq):
                 iteration_list.append(i)
 
                 if 0 <= angle <= 1 and not completed and i >= 500:  # trigger
-                    t1 = Thread(target=controlCam, args=(ser, camDelay,))
+                    t1 = Thread(target=controlCam, args=(ser, syncDelay,))
                     t2 = Thread(target=controlWire, args=(ser,))
                     t1.start()
                     t2.start()
@@ -181,7 +181,8 @@ def create_plt(filename):  # convert time axis to phase
 
 def create_txt(filename, trigT, freq):
     f = open(filename+'.txt', 'w')
-    f.write('Measured frequency: '+str(freq)+' Hz vs matlab '+str(matlab_freq)+' Hz\n')
+    f.write('Measured frequency: '+str(freq) +
+            ' Hz vs matlab '+str(matlab_freq)+' Hz\n')
     f.write('Trigger start at 0 deg: '+str(trigT)+' s\n')
     f.close()
 

@@ -13,19 +13,19 @@ import math
 
 # add function to calculate f before
 
-matlab_freq = 1.377641
-f = 1.40782
+matlab_freq = 4.010642
+f = 3.9874
 p = 1/f
 cDelay = 0.2  # cam trigger delay
-recDelay = cDelay + 1 #can add delay here
+recDelay = cDelay #can add delay here
 NcycDelay = math.ceil(recDelay/p)
-filename = 'Data/1682'
+filename = 'Data/1691/1691'
 
 
 def controlValve(ser):
     ser.write(b'A')  # high
     print('VALVE OPEN')
-    time.sleep(10)  # valve duration
+    time.sleep(12)  # valve duration
     ser.write(b'B')  # low
     print('VALVE CLOSED')
 
@@ -44,9 +44,10 @@ def controlCam(ser):
 
 
 def controlWire(ser):
+    #time.sleep(NcycDelay*p-cDelay-1.5) # optional for low freq cases
     ser.write(b'E')  # high
     print('WIRE ON')
-    time.sleep(5)  # wire duration - Re 60k: 2s, Re 100k: 1.5s
+    time.sleep(7)  # wire duration - Re 60k: 2s, Re 100k: 1.5s
     ser.write(b'F')  # low
     print('WIRE OFF')
 

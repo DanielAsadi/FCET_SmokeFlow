@@ -1,0 +1,2 @@
+Measured frequency: 2.37511 Hz vs matlab 2.363439 Hz
+Trigger start at 0 deg: 10.373471400365137 s

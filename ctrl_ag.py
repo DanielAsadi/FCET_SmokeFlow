@@ -13,8 +13,8 @@ import math
 
 # add function to calculate f before
 
-matlab_freq = 4.796
-filename = 'Data/1683b'
+matlab_freq = 0.349236
+filename = 'Data/1684b'
 
 
 def controlValve(ser):
@@ -181,7 +181,7 @@ def create_plt(filename):  # convert time axis to phase
 
 def create_txt(filename, trigT, freq):
     f = open(filename+'.txt', 'w')
-    f.write('Measured frequency: '+str(freq)+' Hz vs matlab '+str(f)+' Hz\n')
+    f.write('Measured frequency: '+str(freq)+' Hz vs matlab '+str(matlab_freq)+' Hz\n')
     f.write('Trigger start at 0 deg: '+str(trigT)+' s\n')
     f.close()
 

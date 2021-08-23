@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import math
 
+# EDIT FOLLOWING VARIABLES BEFORE RUNNING
 matlab_freq = 0.349236
 filename = 'Data/1684b'
 valveDuration = 2

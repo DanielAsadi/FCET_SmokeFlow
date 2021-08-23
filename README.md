@@ -1,4 +1,4 @@
-# <img src= "Media/FCET_Logo.png" height = "60"> Smoke Flow Visualization Setup
+# <img src= "media/FCET_Logo.png" height = "60"> Smoke Flow Visualization Setup
 This set of code is for the control of the smoke flow visualization experimental setup at the FCET lab wind tunnel in UTIAS. 
 Using an Arduino which receives input from the user or active grid encoder, the circuit outputs timed controls to the valve, heated nichrome wire and camera to create and photograph the smoke flow.
 
@@ -23,40 +23,39 @@ This project uses the virutalenv Python environment. The Pyserial package is ins
 (smokeflow) > pip install pandas
 ```
 ## Smoke Flow Circuit Diagram and Experimental Setup Photos
-<img src= "Media/SmokeFlowCircuit.jpg">
-<img src= "Media/SetupPhoto1.jpg">
-<img src= "Media/SetupPhoto2.jpg">
+<img src= "media/SmokeFlowCircuit.jpg">
+<img src= "media/SetupPhoto1.jpg">
+<img src= "media/SetupPhoto2.jpg">
 
 ## Example Smoke Flow Photos
 ### Re 60k, Alpha 8°, Separation Bubble
-<img src= "Media/Re60kAlpha8SepBubble.png">
+<img src= "media/Re60kAlpha8SepBubble.png">
 
 ### Re 60k, Alpha 4°, Wake
-<img src= "Media/Re60kAlpha4Wake.png">
+<img src= "media/Re60kAlpha4Wake.png">
 
 ## Other Software Used
 PFV4 is used for the control and processing of the photos taken from the high-speed Photron Fastcam SA5
 
 ## File Descriptions
 * **.vscode**: VS Code setup files
-* **AMT22_SPI_Uno.ino**: Original, unmodified code to read encoder output from CUI Inc. website
-* **A_control_manual.ino**: Currently used Arduino code with Arduino Mega
-* **A_control_manual_uno.ino**: Arduino code, but for Arduino Uno instead
-* **A_read_enc_uno.ino**: Code for the second Arduino used which recieves input from the encoder on the active grid
-* **Data**: Encoder data csv and graph files
-* **Media**: Setup diagrams and other pictures
 * **__pycache__**: Python cache files
-* **create_csv.py**: Creates csv for encoder data
-* **create_plot.py**: Creates graph for encoder data
-* **ctrl_V1.py**: Version 1 of Python control code
-* **ctrl_ag.py**: Python control code for unsteady case with active grid and encoder and graphing ability in burst mode
-* **ctrl_ag_V1.py**: Version 1 of Python control code for unsteady case with active grid and encoder
-* **ctrl_ag_cont.py**: Python control code for unsteady case with active grid and encoder and graphing ability in continuous mode
-* **ctrl_ag_live.py**: Runs control_ag2.py and create_plot.py for live plotting using threading and subprocess
-* **ctrl_man.py**: Python control code with componenets manually triggered on/off by user
-* **ctrl_seq.py**: Python control code with timed sequence controlling all compoenents automatically
-* **freq.py**: Interpolates frequency from encoder graph
-* **testEnc.py**: Code for just running and testing encoder output performance
+* **arduino/AMT22_SPI_Uno.ino**: Original, unmodified code to read encoder output from CUI Inc. website (not used)
+* **arduino/commMega.ino**: Currently used Arduino code with Arduino Mega
+* **arduino/encUno.ino**: Code for the second Arduino used which recieves input from the encoder on the active grid
+* **data**: Encoder data csv and graph files
+* **dataAcquisition/create_csv.py**: Creates csv for encoder data (not used)
+* **dataAcquisition/create_plot_phase.py**: Creates phase plot for encoder data, converting time axis
+* **dataAcquisition/freq.py**: Interpolates frequency from encoder graph, separate from ctrl_ag version (testing purposes)
+* **dataAcquisition/testEnc.py**: Code for just running and testing encoder output performance (testing purposes)
+* **media**: Setup diagrams and other pictures
+* **steady/ctrl_V1.py**: Version 1 of Python control code (not used)
+* **steady/ctrl_man.py**: Python control code with componenets manually triggered on/off by user
+* **steady/ctrl_seq.py**: Python control code with timed sequence controlling all compoenents automatically
+* **unsteady/ctrl_ag.py**: Python control code for unsteady case with active grid and encoder and graphing ability in burst mode
+* **unsteady/ctrl_ag_V1.py**: Version 1 of Python control code for unsteady case with active grid and encoder (not used)
+* **unsteady/ctrl_ag_cont.py**: Python control code for unsteady case with active grid and encoder and graphing ability in continuous mode
+* **unsteady/ctrl_ag_live.py**: Runs control_ag_V1.py and create_plot_phase.py for live plotting using threading and subprocess (not used)
 
 ## Version Status
 ### v1.0
@@ -71,4 +70,4 @@ Assisted by: Daniel Foster, University of Toronto, Division of Engineering Scien
 
 Supervised by: Suraj Banal, FCET Lab, UTIAS and Professor Philippe Lavoie, FCET Lab, UTIAS
 
-<img src= "Media/UTIAS_FCET_Crest.jpg">
+<img src= "media/UTIAS_FCET_Crest.jpg">

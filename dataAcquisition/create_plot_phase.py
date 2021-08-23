@@ -31,7 +31,7 @@ def create_plt(filename):  # convert time axis to phase
 
     for t in x:
         t_angle = t * frequency_rad + phaseShift
-        x_angle.append(round(t_angle,5))
+        x_angle.append(round(t_angle, 5))
 
     plt.xticks(np.arange(0, max(x_angle)+1, 360))
     plt.xticks(rotation=60)
@@ -43,6 +43,7 @@ def create_plt(filename):  # convert time axis to phase
 
     return x_angle
 
+
 def get_frequency_from_interpolation(filename):
     data = pd.read_csv(filename + '.csv')
     x = data['t']
@@ -53,8 +54,7 @@ def get_frequency_from_interpolation(filename):
     delta_t_avg = 0
     buffer = 1  # 1 or 2
 
-    if filename == '1681':
-
+    if filename == 'Data/1681/1681':
         delay = 1
 
     choose_angle = y[0 + delay] - 1
@@ -82,11 +82,13 @@ def get_frequency_from_interpolation(filename):
     print('The frequency is', freq, 'Hz')
     return freq
 
+
 def add_angle(filename):
 
     data = pd.read_csv(filename + '.csv')
     data["phase angle"] = create_plt(filename)
     data.to_csv(filename + '.csv', index=False)
+
 
 if __name__ == "__main__":
     add_angle(filename)

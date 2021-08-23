@@ -41,6 +41,7 @@ def create_plt(filename):  # convert time axis to phase
     plt.savefig(filename+'phase.png', dpi=300)
     plt.show()
 
+    return x_angle
 
 def get_frequency_from_interpolation(filename):
     data = pd.read_csv(filename+'.csv')
@@ -76,6 +77,11 @@ def get_frequency_from_interpolation(filename):
     print('The frequency is', freq, 'Hz')
     return freq
 
+def add_angle(filename):
+
+    data = pd.read_csv(filename + '.csv')
+    data["Phase Angle"] = create_plt(filename)
+    data.to_csv(filename + '.csv', index=False)
 
 if __name__ == "__main__":
     create_plt(filename)

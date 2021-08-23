@@ -29,7 +29,7 @@ This project uses the virutalenv Python environment. The Pyserial package is ins
 
 ## Example Smoke Flow Photos
 ### Re 60k, Alpha 8°, Separation Bubble
-<img src= "Media/Re60kAlpha8SepBubble">
+<img src= "Media/Re60kAlpha8SepBubble.png">
 ### Re 60k, Alpha 4°, Wake
 <img src= "Media/Re60kAlpha4Wake.png">
 

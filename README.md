@@ -62,6 +62,8 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 This version supports manual and automated control for steady-state conditions under 5m/s without the active grid or capacitors
 ### v2
 This current version supports v1.0 features and automated control triggered by the active grid encoder with a second Arduino with encoder data acquisition capabilities
+### v3
+This future version will implement capacitors to allow operations at flow speeds above 5 m/s
 
 ## Contributors
 Project by: Daniel Asadi, University of Toronto, Division of Engineering Science

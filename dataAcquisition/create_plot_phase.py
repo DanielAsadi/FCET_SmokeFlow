@@ -81,6 +81,7 @@ def get_frequency_from_interpolation(filename):
     freq = round(1 / delta_t_avg, decimal_places)
     print('The frequency is', freq, 'Hz')
     return freq
+
 def add_angle(filename):
 
     data = pd.read_csv(filename + '.csv')

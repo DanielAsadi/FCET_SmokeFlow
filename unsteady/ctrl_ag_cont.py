@@ -11,8 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import math
 
-# add function to calculate f before
-
+# EDIT FOLLOWING VARIABLES BEFORE RUNNING
 matlab_freq = 4.010642
 filename = 'Data/1691/1691'
 valveDuration = 12

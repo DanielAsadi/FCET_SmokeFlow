@@ -27,6 +27,12 @@ This project uses the virutalenv Python environment. The Pyserial package is ins
 <img src= "Media/SetupPhoto1.jpg">
 <img src= "Media/SetupPhoto2.jpg">
 
+## Example Smoke Flow Photos
+### Re 60k, Alpha 8°, Separation Bubble
+<img src= "Media/Re60kAlpha8SepBubble">
+### Re 60k, Alpha 4°, Wake
+<img src= "Media/Re60kAlpha4Wake.png">
+
 ## Other Software Used
 PFV4 is used for the control and processing of the photos taken from the high-speed Photron Fastcam SA5
 

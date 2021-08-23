@@ -50,7 +50,7 @@ def get_frequency_from_interpolation(filename):
     data = pd.read_csv(filename+'.csv')
     x = data['t']
     y = data['angle']
-    choose_angle = 45
+    choose_angle = y[0] - 1
     rising_midpoints = []
     decimal_places = 3
     delta_t_avg = 0

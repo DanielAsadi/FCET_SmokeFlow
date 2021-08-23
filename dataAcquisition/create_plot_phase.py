@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-filename = 'Data/1672/1672'
+filename = 'Data/1691/1691'
 
 
 def create_plt(filename):  # convert time axis to phase
@@ -31,7 +31,7 @@ def create_plt(filename):  # convert time axis to phase
 
     for t in x:
         t_angle = t * frequency_rad + phaseShift
-        x_angle.append(t_angle)
+        x_angle.append(round(t_angle,5))
 
     plt.xticks(np.arange(0, max(x_angle)+1, 360))
     plt.xticks(rotation=60)
@@ -80,8 +80,8 @@ def get_frequency_from_interpolation(filename):
 def add_angle(filename):
 
     data = pd.read_csv(filename + '.csv')
-    data["Phase Angle"] = create_plt(filename)
+    data["phase angle"] = create_plt(filename)
     data.to_csv(filename + '.csv', index=False)
 
 if __name__ == "__main__":
-    create_plt(filename)
+    add_angle(filename)

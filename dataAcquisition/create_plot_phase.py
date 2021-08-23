@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-filename = 'Data/1671'
+filename = 'Data/1672/1672'
 
 
 def create_plt(filename):  # convert time axis to phase
@@ -28,14 +28,10 @@ def create_plt(filename):  # convert time axis to phase
         if angle == min(y):
             phaseShift = 360 - t * frequency_rad
             break
-    print(phaseShift)
 
     for t in x:
         t_angle = t * frequency_rad + phaseShift
         x_angle.append(t_angle)
-    
-    print(x_angle.index(360))
-    print(x_angle)
 
     plt.xticks(np.arange(0, max(x_angle)+1, 360))
     plt.xticks(rotation=60)

@@ -215,7 +215,7 @@ def get_frequency_from_interpolation():
             except ValueError:
                 print('ERROR')
 
-    choose_angle = 45
+    choose_angle = y[0] - 1
     rising_midpoints = []
     decimal_places = 5
     delta_t_avg = 0

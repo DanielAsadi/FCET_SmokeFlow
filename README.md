@@ -72,4 +72,4 @@ Assisted by: Daniel Foster, University of Toronto, Division of Engineering Scien
 
 Supervised by: Suraj Banal, FCET Lab, UTIAS and Professor Philippe Lavoie, FCET Lab, UTIAS
 
-<img src= "media/UTIAS_FCET_Crest.jpg"> <img src= "media/nserc.png">
+<img src= "media/UTIAS_FCET_Crest.jpg" height = "60"> <img src= "media/nserc.png" height = "60">

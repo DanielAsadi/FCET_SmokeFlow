@@ -10,13 +10,17 @@ from threading import Thread
 import matplotlib.pyplot as plt
 import pandas as pd
 import math
+import subprocess
+import os
 
 # EDIT FOLLOWING VARIABLES BEFORE RUNNING
 matlab_freq = 0.178588
-filename = 'Data/1790/1790_0deg_2'
+caseNo = '1790'
+extraInfoFilename = ''
+filename = 'data/'+caseNo+'/'+caseNo+extraInfoFilename
 valveDuration = 2
 wireDuration = 2
-p = 0
+p = 0  # phase angle trigger 0, 45, 90, 135, 180, 225, 270, 315
 
 
 def controlValve(ser):
@@ -95,14 +99,14 @@ def readEnc(loops, filename, freq):
                 iteration_list.append(i)
                 # 360, 405, 450, 495, 540, 585, 630, 675, 720
 
-                if  0 <= angle <= 1 and count == 0:
+                if 0 <= angle <= 1 and count == 0:
                     count += 1
                     frequency_rad = 360 * freq
                     phaseShift = 360 - t * frequency_rad
-                
-                phase_angle = round((t * frequency_rad + phaseShift),5)
 
-                if round(phase_angle) % 360 == 0 and not completed and i >= 400:  # trigger
+                phase_angle = round((t * frequency_rad + phaseShift), 5)
+
+                if round(phase_angle) % 360 == p and not completed and i >= 400:  # trigger
                     t1 = Thread(target=controlCam, args=(ser, syncDelay,))
                     t2 = Thread(target=controlWire, args=(ser, syncDelay,))
                     t1.start()
@@ -202,60 +206,63 @@ def create_txt(filename, trigT, freq):
 
 
 def get_frequency_from_interpolation():
-    print('Acquiring frequency...')
-    x = []
-    y = []
-    start = datetime.now().timestamp()
-
     while True:
-        line = ser2.readline()  # read a byte
-        if line:
-            try:
-                # updating values
-                s = line.decode()  # convert the byte string to a unicode string
-                s2 = s.strip('\r\n')
-                angle = int(s2)
-                ser2.reset_input_buffer()
-                ser2.reset_output_buffer()
+        print('Acquiring frequency...')
+        x = []
+        y = []
+        start = datetime.now().timestamp()
 
-                end = datetime.now().timestamp()
-                t = round(end-start, 5)  # update time
-                x.append(t)
-                y.append(angle)
+        while True:
+            line = ser2.readline()  # read a byte
+            if line:
+                try:
+                    # updating values
+                    s = line.decode()  # convert the byte string to a unicode string
+                    s2 = s.strip('\r\n')
+                    angle = int(s2)
+                    ser2.reset_input_buffer()
+                    ser2.reset_output_buffer()
 
-                if t > 10:
-                    break
-            except ValueError:
-                print('ERROR')
+                    end = datetime.now().timestamp()
+                    t = round(end-start, 5)  # update time
+                    x.append(t)
+                    y.append(angle)
 
-    choose_angle = y[0] - 1
-    rising_midpoints = []
-    decimal_places = 5
-    delta_t_avg = 0
-    buffer = 1  # 1 or 2
+                    if t > 10:
+                        break
+                except ValueError:
+                    print('ERROR')
 
-    for index_freq in range(0, len(y) - buffer):
+        choose_angle = y[0] - 1
+        rising_midpoints = []
+        decimal_places = 5
+        delta_t_avg = 0
+        buffer = 1  # 1 or 2
 
-        if y[index_freq] < choose_angle < y[index_freq + buffer]:
+        for index_freq in range(0, len(y) - buffer):
 
-            m = (y[index_freq + buffer] - y[index_freq]) / \
-                (x[index_freq + buffer] - x[index_freq])
-            b = y[index_freq + buffer] - m * x[index_freq + buffer]
-            rising_midpoints.append(
-                round((choose_angle - b) / m, decimal_places))
+            if y[index_freq] < choose_angle < y[index_freq + buffer]:
 
-        elif y[index_freq + buffer] == choose_angle and y[index_freq] < choose_angle:
+                m = (y[index_freq + buffer] - y[index_freq]) / \
+                    (x[index_freq + buffer] - x[index_freq])
+                b = y[index_freq + buffer] - m * x[index_freq + buffer]
+                rising_midpoints.append(
+                    round((choose_angle - b) / m, decimal_places))
 
-            rising_midpoints.append(
-                round(x[index_freq + buffer], decimal_places))
+            elif y[index_freq + buffer] == choose_angle and y[index_freq] < choose_angle:
 
-    for index_freq in range(0, len(rising_midpoints) - 1):
+                rising_midpoints.append(
+                    round(x[index_freq + buffer], decimal_places))
 
-        delta_t_avg += (rising_midpoints[index_freq + 1] -
-                        rising_midpoints[index_freq]) / (len(rising_midpoints) - 1)
+        for index_freq in range(0, len(rising_midpoints) - 1):
 
-    freq = round(1 / delta_t_avg, decimal_places)
-    return freq
+            delta_t_avg += (rising_midpoints[index_freq + 1] -
+                            rising_midpoints[index_freq]) / (len(rising_midpoints) - 1)
+        try:
+            freq = round(1 / delta_t_avg, decimal_places)
+            return freq
+        except:
+            print('Frequency calculation error. Recalculating...')
 
 
 def emergencyStop(ser):
@@ -268,14 +275,26 @@ def emergencyStop(ser):
     ser.write(b'H')  # low
     print('CAP CHARGING')
     ser.close()
+    ser2.close()
     quit()
 
 
 if __name__ == "__main__":
-    # make sure the 'COM#' is set according the Windows Device Manager
-    ser = serial.Serial('COM4', 115200, timeout=1)
-    ser2 = serial.Serial('COM10', 115200, timeout=0.01)
-    time.sleep(2)
+    parentDir = str(os.path.dirname(__file__)).replace('/unsteady', '/data')
+    if not os.path.isdir(parentDir+'/'+caseNo):
+        os.mkdir(os.path.join(parentDir, caseNo))
+
+    while True:
+        try:
+            # make sure the 'COM#' is set according the Windows Device Manager
+            ser = serial.Serial('COM4', 115200, timeout=1)
+            ser2 = serial.Serial('COM10', 115200, timeout=0.01)
+            break
+        except:
+            print('Serial port error. Reconecting...')
+        time.sleep(2)
+
+    print('Serial ports connected')
     setting = 5
 
     while True:
@@ -301,7 +320,14 @@ if __name__ == "__main__":
                 continue
             else:
                 readEnc(2000, filename, freq)
-                print()
+                while True:
+                    try:
+                        t1 = Thread(target=subprocess.run, args=(
+                            ["python", "dataAcquisition/create_plot_phase.py"],))
+                        t1.start()
+                        print()
+                    except:
+                        print('Frequency calculation error. Recalculating...')
         elif setting == 0:
             emergencyStop(ser)
         else:

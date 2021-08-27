@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-filename = 'Data/1790/1790_0deg_2'
+filename = 'Data/1790/1790_0deg'
 
 
 def create_plt(filename):  # convert time axis to phase
@@ -79,7 +79,7 @@ def get_frequency_from_interpolation(filename):
                         rising_midpoints[index_freq]) / (len(rising_midpoints) - 1)
 
     freq = round(1 / delta_t_avg, decimal_places)
-    print('The frequency is', freq, 'Hz')
+    # print('The frequency is', freq, 'Hz')
     return freq
 
 

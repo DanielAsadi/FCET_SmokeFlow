@@ -74,10 +74,16 @@ def emergencyStop(ser):
     quit()
 
 if __name__ == "__main__":
-    # make sure the 'COM#' is set according the Windows Device Manager
-    ser = serial.Serial('COM4', 115200, timeout=1)
-    #ser.close() #temporary
-    time.sleep(2)
+    while True:
+        try:
+            # make sure the 'COM#' is set according the Windows Device Manager
+            ser = serial.Serial('COM4', 115200, timeout=1)
+            break
+        except:
+            print('Serial port error. Reconecting...')
+        time.sleep(2)
+
+    print('Serial ports connected')
     status1 = 0
     status2 = 0
     status3 = 0

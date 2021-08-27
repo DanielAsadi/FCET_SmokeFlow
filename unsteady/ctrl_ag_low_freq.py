@@ -16,7 +16,7 @@ import os
 # EDIT FOLLOWING VARIABLES BEFORE RUNNING
 matlab_freq = 0.178588
 caseNo = '1790'
-extraInfoFilename = ''
+extraInfoFilename = ''  # add info such as phase angle trigger or _2 for a 2nd trial
 filename = 'data/'+caseNo+'/'+caseNo+extraInfoFilename
 valveDuration = 2
 wireDuration = 2

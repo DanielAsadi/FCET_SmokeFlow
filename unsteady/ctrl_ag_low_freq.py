@@ -12,8 +12,8 @@ import pandas as pd
 import math
 
 # EDIT FOLLOWING VARIABLES BEFORE RUNNING
-matlab_freq = 0.178797
-filename = 'Data/1790/1790'
+matlab_freq = 0.178588
+filename = 'Data/1790/1790_0deg_2'
 valveDuration = 2
 wireDuration = 2
 p = 0
@@ -40,7 +40,8 @@ def controlCam(ser, syncDelay):
     print('CAM READY')
 
 
-def controlWire(ser):
+def controlWire(ser, syncDelay):
+    time.sleep(syncDelay-1)  # optional for low freq cases
     ser.write(b'E')  # high
     print('WIRE ON')
     time.sleep(wireDuration)  # wire duration
@@ -101,16 +102,16 @@ def readEnc(loops, filename, freq):
                 
                 phase_angle = round((t * frequency_rad + phaseShift),5)
 
-                if round(phase_angle) % 360 == p and not completed and i >= 700:  # trigger
+                if round(phase_angle) % 360 == 0 and not completed and i >= 400:  # trigger
                     t1 = Thread(target=controlCam, args=(ser, syncDelay,))
-                    t2 = Thread(target=controlWire, args=(ser,))
+                    t2 = Thread(target=controlWire, args=(ser, syncDelay,))
                     t1.start()
                     t2.start()
                     trigT = t + NcycDelay * p - cDelay + 0.2
                     print('Cam triggered at: '+str(trigT)+' s')
                     completed = True
 
-                if completed and (t > (trigT+5)):
+                if completed and (t > (trigT+8)):
                     break
             except ValueError:
                 print('ERROR')

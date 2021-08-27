@@ -12,8 +12,8 @@ import pandas as pd
 import math
 
 # EDIT FOLLOWING VARIABLES BEFORE RUNNING
-matlab_freq = 4.010642
-filename = 'Data/1691/1691'
+matlab_freq = 0.178797
+filename = 'Data/1790/1790'
 valveDuration = 12
 wireDuration = 7
 
@@ -39,8 +39,8 @@ def controlCam(ser, syncDelay):
     print('CAM READY')
 
 
-def controlWire(ser):
-    # time.sleep(NcycDelay*p-cDelay-1.5) # optional for low freq cases
+def controlWire(ser, syncDelay):
+    # time.sleep(syncDelay-2)  # optional for low freq cases
     ser.write(b'E')  # high
     print('WIRE ON')
     time.sleep(wireDuration)  # wire duration
@@ -96,7 +96,7 @@ def readEnc(loops, filename, freq):
 
                 if 0 <= angle <= 1 and not completed and i >= 1000:  # cam + wire trigger
                     t1 = Thread(target=controlCam, args=(ser, syncDelay,))
-                    t2 = Thread(target=controlWire, args=(ser,))
+                    t2 = Thread(target=controlWire, args=(ser, syncDelay,))
                     t1.start()
                     t2.start()
                     trigT = t + NcycDelay * p - cDelay + 0.2
@@ -130,7 +130,7 @@ def readEnc(loops, filename, freq):
         create_csv(filename, t_list, angle_list, iteration_list)
         create_plt(filename)
         create_txt(filename, trigT, freq)
-        print()
+        emergencyStop(ser)
 
 
 def create_csv(filename, t_list, angle_list, iteration_list):
@@ -265,8 +265,8 @@ def emergencyStop(ser):
 
 if __name__ == '__main__':
     # make sure the 'COM#' is set according the Windows Device Manager
-    ser = serial.Serial('COM7', 115200, timeout=1)
-    ser2 = serial.Serial('COM5', 115200, timeout=0.01)
+    ser = serial.Serial('COM4', 115200, timeout=1)
+    ser2 = serial.Serial('COM10', 115200, timeout=0.01)
     time.sleep(2)
     setting = 5
 

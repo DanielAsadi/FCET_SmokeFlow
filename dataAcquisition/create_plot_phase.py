@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-filename = 'Data/1691/1691'
+filename = 'Data/1790/1790'
 
 
 def create_plt(filename):  # convert time axis to phase

@@ -63,7 +63,7 @@ def emergencyStop():
 
 if __name__ == "__main__":
     # make sure the 'COM#' is set according the Windows Device Manager
-    ser = serial.Serial('COM7', 115200, timeout=1)
+    ser = serial.Serial('COM4', 115200, timeout=1)
     time.sleep(2)
     setting = 5
 

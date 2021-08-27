@@ -16,6 +16,7 @@ matlab_freq = 0.178797
 filename = 'Data/1790/1790'
 valveDuration = 2
 wireDuration = 2
+p = 0
 
 
 def controlValve(ser):
@@ -61,6 +62,9 @@ def readEnc(loops, filename, freq):
     angle_list = []
     iteration_list = []
     trigT = 0
+    count = 0
+    frequency_rad = 0
+    phaseShift = 0
 
     p = 1/freq
     cDelay = 0.2  # cam trigger delay
@@ -88,8 +92,16 @@ def readEnc(loops, filename, freq):
                 t_list.append(t)
                 angle_list.append(angle)
                 iteration_list.append(i)
+                # 360, 405, 450, 495, 540, 585, 630, 675, 720
 
-                if 0 <= angle <= 1 and not completed and i >= 500:  # trigger
+                if  0 <= angle <= 1 and count == 0:
+                    count += 1
+                    frequency_rad = 360 * freq
+                    phaseShift = 360 - t * frequency_rad
+                
+                phase_angle = round((t * frequency_rad + phaseShift),5)
+
+                if round(phase_angle) % 360 == p and not completed and i >= 700:  # trigger
                     t1 = Thread(target=controlCam, args=(ser, syncDelay,))
                     t2 = Thread(target=controlWire, args=(ser,))
                     t1.start()

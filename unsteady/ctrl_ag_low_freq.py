@@ -17,7 +17,7 @@ import os
 matlab_freq = 0.178588
 caseNo = '1790'
 extraInfoFilename = ''  # add info such as phase angle trigger or _2 for a 2nd trial
-filename = 'data/'+caseNo+'/'+caseNo+extraInfoFilename
+filename = 'data/'+caseNo+'/'+caseNo+extraInfoFilename  # also change file name in create_plot_phase.py
 valveDuration = 2
 wireDuration = 2
 p = 0  # phase angle trigger 0, 45, 90, 135, 180, 225, 270, 315

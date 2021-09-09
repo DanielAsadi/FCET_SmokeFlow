@@ -57,6 +57,7 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **unsteady/ctrl_ag_V1.py**: Version 1 of Python control code for unsteady case with active grid and encoder (not used)
 * **unsteady/ctrl_ag_cont.py**: Python control code for unsteady case with active grid and encoder and graphing ability in continuous mode
 * **unsteady/ctrl_ag_live.py**: Runs control_ag_V1.py and create_plot_phase.py for live plotting using threading and subprocess (not used)
+* **unsteady/ctrl_ag_low_freq.py**: Python control code for unsteady case with active grid and encoder and graphing ability in burst mode triggered at specified phase angle
 
 ## Version Status
 ### v1

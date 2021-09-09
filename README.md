@@ -49,6 +49,7 @@ PFV4 is used for the control and processing of the photos taken from the high-sp
 * **dataAcquisition/freq.py**: Interpolates frequency from encoder graph, separate from ctrl_ag version (testing purposes)
 * **dataAcquisition/testEnc.py**: Code for just running and testing encoder output performance (testing purposes)
 * **media**: Setup diagrams and other pictures
+* **info**: PDF documents with resources and information about the project
 * **steady/ctrl_V1.py**: Version 1 of Python control code (not used)
 * **steady/ctrl_man.py**: Python control code with componenets manually triggered on/off by user
 * **steady/ctrl_seq.py**: Python control code with timed sequence controlling all compoenents automatically
